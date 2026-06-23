@@ -1,219 +1,215 @@
 // ====================================================================
-//  A GENTE VAI DE TURMA — Gincana RPG
+//  A GENTE VAI DE TURMA — O Incidente em Produção
 //  Dados do jogo: personagens, cenários e configurações
 // ====================================================================
 
 const CONFIG = {
-  pontosPorAcerto: 20,        // pontos de heroísmo por opção correta
-  totalAcoes: 15,             // 5 personagens x 3 ações
-  pontuacaoMaxima: 300,       // 15 x 20
-  limiteParaVencer: 200,      // pontos necessários para derrotar o dragão
-  tempoDiscussao: 60          // segundos de discussão por ação (cronômetro)
+  pontosPorAcerto: 20,
+  pontuacaoMaxima: 300,
+  limiteParaVencer: 200,
+  tempoDiscussao: 60
 };
 
-// Ordem das equipes a cada rodada
 const PERSONAGENS = [
   {
-    id: 'bardo',
-    nome: 'Bardo Anão',
+    id: 'frontend',
+    nome: 'Dev Front-End',
     equipe: 'Equipe 1',
     cor: '#2f80ed',
     corClara: '#7fb1f5',
-    epiteto: 'O Animador da Turma',
-    descricao: 'Com sua música e bom humor, mantém o grupo unido nos momentos difíceis.'
+    epiteto: 'A Interface da Turma',
+    descricao: 'Dá rosto ao produto. Sabe que a melhor tela é aquela construída junto com quem vai usá-la.'
   },
   {
-    id: 'arqueiro',
-    nome: 'Arqueiro Elfo',
+    id: 'backend',
+    nome: 'Dev Back-End',
     equipe: 'Equipe 2',
     cor: '#27ae60',
     corClara: '#6fe39b',
-    epiteto: 'Os Olhos da Turma',
-    descricao: 'Enxerga longe e compartilha o que vê para guiar todos com precisão.'
+    epiteto: 'O Motor da Turma',
+    descricao: 'Faz a mágica acontecer nos bastidores. Código robusto nasce do diálogo com o time.'
   },
   {
-    id: 'mago',
-    nome: 'Mago Ancião',
+    id: 'dados',
+    nome: 'Engenheiro de Dados',
     equipe: 'Equipe 3',
     cor: '#8e44ad',
     corClara: '#c879ec',
-    epiteto: 'A Sabedoria da Turma',
-    descricao: 'Conhecimento poderoso que só faz sentido quando ensinado e dividido.'
+    epiteto: 'A Bússola da Turma',
+    descricao: 'Transforma caos em clareza. Dados bem compartilhados iluminam o caminho de todos.'
   },
   {
-    id: 'barbaro',
-    nome: 'Bárbaro Orc',
+    id: 'ux',
+    nome: 'UX Designer',
     equipe: 'Equipe 4',
     cor: '#e8590c',
     corClara: '#ff9e6b',
-    epiteto: 'A Força da Turma',
-    descricao: 'Imensa força bruta que protege o grupo quando colocada a serviço de todos.'
+    epiteto: 'A Empatia da Turma',
+    descricao: 'Coloca o usuário no centro e o time ao seu lado. Design bom é design co-criado.'
   },
   {
-    id: 'paladino',
-    nome: 'Paladino Humano',
+    id: 'po',
+    nome: 'Product Owner',
     equipe: 'Equipe 5',
     cor: '#f1b30b',
     corClara: '#ffd966',
-    epiteto: 'O Escudo da Turma',
-    descricao: 'Coragem e honra para defender os companheiros e pedir ajuda quando precisa.'
+    epiteto: 'O Maestro da Turma',
+    descricao: 'Conecta visão de negócio e execução técnica. O backlog mais saudável é o mais alinhado.'
   }
 ];
 
 // ---------------------------------------------------------------------
-//  CENÁRIOS
-//  Para cada personagem, 3 ações consecutivas. Cada ação tem 3 opções,
-//  apenas uma alinhada ao pilar "A gente vai de turma".
-//  "correta" = índice (0,1,2) da opção certa.
+//  CENÁRIOS — metáforas de situações reais de cada área
+//  correta: true = opção alinhada ao pilar "A gente vai de turma"
 // ---------------------------------------------------------------------
 
 const CENARIOS = {
-  bardo: [
+  frontend: [
     {
-      titulo: 'Ação 1 — O grupo desanimado',
-      situacao: 'Após uma derrota difícil, a turma está cabisbaixa e sem energia para seguir. O Bardo Anão percebe o clima pesado. O que ele faz?',
+      titulo: 'Ação 1 — Bug em produção',
+      situacao: 'A tela principal do app trava para os usuários em produção. Reclamações chegam em tempo real. O que o Dev Front-End faz?',
       opcoes: [
-        { texto: 'Toca uma música épica e relembra as conquistas do grupo para reerguer o ânimo de todos.', correta: true, feedback: 'Confiar e dar suporte: o Bardo eleva a turma inteira. A gente vai de turma!' },
-        { texto: 'Decide procurar sozinho um grupo de aventureiros mais experientes.', correta: false, feedback: 'Abandonar a turma em vez de apoiá-la enfraquece a todos.' },
-        { texto: 'Aponta quem foram os culpados pela derrota para que aprendam a lição.', correta: false, feedback: 'Culpar os colegas só aprofunda o desânimo do grupo.' }
+        { texto: 'Avisa o canal do time, compartilha o erro e aciona Back-End e QA para investigarem juntos.', correta: true, feedback: 'Comunicar e convocar a turma é a resposta mais rápida e segura para incidentes.' },
+        { texto: 'Tenta corrigir sozinho no código sem avisar ninguém para não parecer que não sabe.', correta: false, feedback: 'Silêncio em incidente prolonga o impacto e priva o time de ajudar.' },
+        { texto: 'Aguarda — parece bug pequeno que vai se resolver sozinho.', correta: false, feedback: 'Esperar sem comunicar é a pior decisão em produção.' }
       ]
     },
     {
-      titulo: 'Ação 2 — O segredo da taverna',
-      situacao: 'Na taverna, o Bardo descobre uma rota secreta que evita uma emboscada perigosa. O que ele faz com essa informação?',
+      titulo: 'Ação 2 — Prazo vs. qualidade',
+      situacao: 'Uma feature nova depende de uma API que o Back-End ainda não terminou. A sprint fecha em dois dias. O que fazer?',
       opcoes: [
-        { texto: 'Guarda só para si, garantindo vantagem caso precise fugir primeiro.', correta: false, feedback: 'Reter informação coloca a turma em risco.' },
-        { texto: 'Compartilha a rota com todo o grupo para que ninguém caia na emboscada.', correta: true, feedback: 'Confiar e trabalhar junto: informação dividida protege a turma toda.' },
-        { texto: 'Conta apenas para o Paladino, que é o mais forte.', correta: false, feedback: 'Privilegiar um deixa o restante da turma vulnerável.' }
+        { texto: 'Alinha com o Back-End para criar um mock e segue em paralelo, avisando o PO do ajuste.', correta: true, feedback: 'Trabalhar em paralelo com comunicação transparente mantém a turma avançando.' },
+        { texto: 'Entrega a feature pela metade sem avisar o PO para não decepcionar.', correta: false, feedback: 'Entregar incompleto sem avisar quebra a confiança do time.' },
+        { texto: 'Para tudo e fica esperando, bloqueado, sem falar com ninguém.', correta: false, feedback: 'Travar sem comunicar paralisa a turma inteira.' }
       ]
     },
     {
-      titulo: 'Ação 3 — A canção final',
-      situacao: 'Antes da batalha contra o Dragão, o medo toma conta. O Bardo tem uma última chance de preparar a turma. Como ele age?',
+      titulo: 'Ação 3 — O feedback do usuário',
+      situacao: 'Pesquisa de satisfação indica que os usuários acham a navegação confusa. O Dev Front-End tem suas próprias ideias, mas o UX Designer tem outro ponto de vista. Como age?',
       opcoes: [
-        { texto: 'Compõe um hino que celebra a força de cada companheiro e une todos em um só propósito.', correta: true, feedback: 'Ser um só time: o Bardo transforma medo em coragem coletiva.' },
-        { texto: 'Diz que cada um deve se virar sozinho na hora do combate.', correta: false, feedback: '"Cada um por si" é o oposto de ir de turma.' },
-        { texto: 'Foge discretamente para evitar o perigo.', correta: false, feedback: 'Abandonar a turma na hora decisiva quebra a confiança.' }
+        { texto: 'Ignora o UX e implementa do jeito que acha certo, afinal é ele quem coda.', correta: false, feedback: 'Ignorar o UX fragmenta o produto e a turma.' },
+        { texto: 'Senta com o UX Designer para co-criar a solução unindo visão técnica e de experiência.', correta: true, feedback: 'Front-End e UX juntos entregam a melhor experiência. A gente vai de turma!' },
+        { texto: 'Escala para o PO decidir sozinho para não entrar em conflito.', correta: false, feedback: 'Fugir do diálogo direto adia o problema e sobrecarrega o PO.' }
       ]
     }
   ],
 
-  arqueiro: [
+  backend: [
     {
-      titulo: 'Ação 1 — A visão privilegiada',
-      situacao: 'Do alto de uma colina, o Arqueiro Elfo enxerga inimigos que o resto do grupo não consegue ver. O que ele faz?',
+      titulo: 'Ação 1 — Alerta às 3h da manhã',
+      situacao: 'A API caiu em produção às 3h durante um deploy crítico. O Dev Back-End é o único on-call. Como age?',
       opcoes: [
-        { texto: 'Atira sozinho, sem avisar, para abater o máximo de inimigos primeiro.', correta: false, feedback: 'Agir sozinho expõe a turma desprevenida.' },
-        { texto: 'Fica em silêncio para não dividir o crédito da vitória.', correta: false, feedback: 'Esconder informação por vaidade prejudica todos.' },
-        { texto: 'Sinaliza a posição dos inimigos e orienta o grupo para se posicionar junto.', correta: true, feedback: 'Pedir e dar ajuda: o Arqueiro guia a turma com o que só ele vê.' }
+        { texto: 'Tenta resolver sozinho em silêncio para não parecer fraco ou desinformado.', correta: false, feedback: 'Incidente crítico sem time aumenta o tempo de resposta e o impacto.' },
+        { texto: 'Aciona o canal de incidente, compartilha os logs e chama quem puder ajudar a diagnosticar.', correta: true, feedback: 'Ninguém resolve incidente crítico melhor do que uma turma alinhada.' },
+        { texto: 'Deixa para manhã para não incomodar os colegas fora do horário.', correta: false, feedback: 'Produção parada não espera o horário comercial.' }
       ]
     },
     {
-      titulo: 'Ação 2 — A última flecha',
-      situacao: 'Restou apenas uma flecha e dois aliados precisam de cobertura ao mesmo tempo. O Arqueiro hesita. Como decide?',
+      titulo: 'Ação 2 — Vulnerabilidade no código alheio',
+      situacao: 'Revisando o código, o Dev Back-End encontra uma vulnerabilidade de segurança no PR de um colega. O que faz?',
       opcoes: [
-        { texto: 'Conversa rápido com o grupo para decidir juntos qual flanco é mais crítico.', correta: true, feedback: 'Decisão em turma: ouvir o grupo gera a melhor escolha.' },
-        { texto: 'Guarda a flecha para se proteger caso ele mesmo seja atacado.', correta: false, feedback: 'Pensar só em si abandona os aliados.' },
-        { texto: 'Atira no alvo mais fácil para garantir um acerto no seu placar.', correta: false, feedback: 'Buscar mérito individual ignora a necessidade da turma.' }
+        { texto: 'Ignora — não é o código dele, e apontar isso pode gerar conflito.', correta: false, feedback: 'Omitir vulnerabilidade por conforto expõe o produto e a turma.' },
+        { texto: 'Corrige o código silenciosamente sem avisar o colega, para ganhar tempo.', correta: false, feedback: 'Corrigir sem comunicar impede o colega de aprender e cria dependência.' },
+        { texto: 'Avisa o colega com respeito, explica o risco e sugere corrigirem ou revisarem juntos.', correta: true, feedback: 'Feedback direto e respeitoso fortalece o código e a turma.' }
       ]
     },
     {
-      titulo: 'Ação 3 — O aprendiz',
-      situacao: 'Um jovem aliado quer aprender a usar o arco, mas está atrasando o ritmo. O Arqueiro percebe o esforço dele. O que faz?',
+      titulo: 'Ação 3 — Documentação desatualizada',
+      situacao: 'Ninguém usa a documentação das APIs porque está defasada. O Front-End perde horas toda semana tentando entender os endpoints. O que o Back-End faz?',
       opcoes: [
-        { texto: 'Manda o aprendiz ficar para trás para não atrapalhar a missão.', correta: false, feedback: 'Excluir quem está aprendendo enfraquece a turma a longo prazo.' },
-        { texto: 'Tira um tempo para ensinar suas técnicas e fortalecer o grupo como um todo.', correta: true, feedback: 'Ajudar a crescer: ensinar é fazer a turma inteira evoluir.' },
-        { texto: 'Faz tudo sozinho para ser mais rápido, ignorando o aprendiz.', correta: false, feedback: 'Centralizar tudo impede que a turma fique mais forte.' }
+        { texto: 'Atualiza por conta própria, em silêncio, sem comunicar o time.', correta: false, feedback: 'Atualizar sem envolver o time não resolve o problema estrutural.' },
+        { texto: 'Propõe uma sessão rápida com o time para definir juntos um padrão e dividir a responsabilidade.', correta: true, feedback: 'Documentação é responsabilidade coletiva. A turma que define junta, usa junta.' },
+        { texto: 'Considera que é problema de quem vai usar — quem precisa que pergunte.', correta: false, feedback: '"Quem precisar que pergunte" desperdiça tempo e quebra autonomia do time.' }
       ]
     }
   ],
 
-  mago: [
+  dados: [
     {
-      titulo: 'Ação 1 — O feitiço raro',
-      situacao: 'O Mago Ancião domina um feitiço de cura que ninguém mais conhece. Um aliado quer aprender. O que ele faz?',
+      titulo: 'Ação 1 — Relatório inconsistente',
+      situacao: 'O relatório gerencial está com dados incorretos e a reunião começa em 30 minutos. O Engenheiro de Dados percebe o problema. O que faz?',
       opcoes: [
-        { texto: 'Ensina o feitiço, pois conhecimento dividido fortalece toda a turma.', correta: true, feedback: 'Dividir saber: a turma fica mais forte quando todos aprendem.' },
-        { texto: 'Recusa, para continuar sendo o único insubstituível do grupo.', correta: false, feedback: 'Reter conhecimento por status fragiliza a turma.' },
-        { texto: 'Cobra um preço alto em ouro para ensinar.', correta: false, feedback: 'Transformar ajuda em barganha quebra a confiança do grupo.' }
+        { texto: 'Esconde o problema e apresenta mesmo sabendo que os dados estão errados.', correta: false, feedback: 'Apresentar dados errados mina a confiança em toda a área.' },
+        { texto: 'Avisa o gestor e o time imediatamente, explica o problema e propõe um plano de contingência.', correta: true, feedback: 'Transparência rápida e solução em turma é o que salva a reunião e a credibilidade.' },
+        { texto: 'Cancela a reunião por conta própria sem consultar ninguém.', correta: false, feedback: 'Cancelar unilateralmente sem comunicar gera caos desnecessário.' }
       ]
     },
     {
-      titulo: 'Ação 2 — A decisão arriscada',
-      situacao: 'O Mago acredita que tem o plano perfeito, mas o restante do grupo tem dúvidas. Como ele conduz?',
+      titulo: 'Ação 2 — Dado que ninguém entende',
+      situacao: 'Um analista de negócio não consegue interpretar o dashboard entregue pelo Engenheiro de Dados e está tomando decisões erradas. Como age?',
       opcoes: [
-        { texto: 'Ignora as dúvidas e executa o plano do seu jeito, afinal é o mais sábio.', correta: false, feedback: 'Atropelar o grupo despreza a inteligência coletiva.' },
-        { texto: 'Escuta as preocupações e ajusta o plano junto com a turma.', correta: true, feedback: 'Trabalhar com autonomia e em conjunto: ouvir torna o plano melhor.' },
-        { texto: 'Desiste de opinar para evitar conflito e deixa tudo por conta dos outros.', correta: false, feedback: 'Omitir-se não é colaborar; a turma perde sua contribuição.' }
+        { texto: 'Manda um e-mail técnico longo e considera o assunto resolvido.', correta: false, feedback: 'E-mail técnico sem diálogo não garante entendimento nem decisão correta.' },
+        { texto: 'Diz que interpretar é responsabilidade do analista — ele que aprenda.', correta: false, feedback: 'Dado sem contexto não serve ao negócio. O valor é no entendimento, não na entrega.' },
+        { texto: 'Agenda uma sessão rápida, escuta a dúvida e explica o dado em linguagem do negócio.', correta: true, feedback: 'Dado que une engenharia e negócio é dado que gera valor. A gente vai de turma!' }
       ]
     },
     {
-      titulo: 'Ação 3 — A magia esgotada',
-      situacao: 'No meio da jornada, o Mago percebe que sua energia mágica está quase no fim e ele não conseguirá sozinho. O que faz?',
+      titulo: 'Ação 3 — Risco invisível no pipeline',
+      situacao: 'O Engenheiro percebe que o pipeline de ETL vai falhar no próximo mês com o aumento de volume previsto. Ninguém mais sabe disso. O que faz?',
       opcoes: [
-        { texto: 'Esconde o problema por orgulho, fingindo que está tudo bem.', correta: false, feedback: 'Esconder a fraqueza coloca a turma em perigo.' },
-        { texto: 'Pede ajuda ao grupo e combina como compensar sua limitação.', correta: true, feedback: 'Pedir ajuda também é ir de turma. Ninguém precisa carregar tudo sozinho.' },
-        { texto: 'Abandona a missão silenciosamente para não ser visto fraco.', correta: false, feedback: 'Sumir deixa a turma desfalcada na hora errada.' }
+        { texto: 'Espera o problema acontecer e conserta na hora — menos trabalho agora.', correta: false, feedback: 'Deixar o risco explodir cria crise evitável e sobrecarrega toda a turma.' },
+        { texto: 'Compartilha a análise com o time e planeja a solução preventiva junto com os envolvidos.', correta: true, feedback: 'Antecipar e compartilhar riscos é o maior presente que a turma pode dar a si mesma.' },
+        { texto: 'Resolve sozinho sem falar nada para mostrar que é indispensável.', correta: false, feedback: 'Ser indispensável por sigilo é fragilidade disfarçada de força.' }
       ]
     }
   ],
 
-  barbaro: [
+  ux: [
     {
-      titulo: 'Ação 1 — A ponte quebrada',
-      situacao: 'Uma ponte cedeu e o grupo precisa atravessar um abismo. O Bárbaro Orc é o mais forte de todos. O que ele faz?',
+      titulo: 'Ação 1 — Design vs. prazo',
+      situacao: 'O UX Designer propôs uma interação inovadora, mas o time de Dev avisa que levaria o triplo do tempo para implementar no prazo. Como age?',
       opcoes: [
-        { texto: 'Atravessa primeiro sozinho e segue na frente, deixando os outros para trás.', correta: false, feedback: 'A força isolada não leva a turma a lugar nenhum.' },
-        { texto: 'Usa a força para segurar uma tora e criar uma passagem segura para todos.', correta: true, feedback: 'Força a serviço da turma: o poder dele protege o grupo inteiro.' },
-        { texto: 'Exige que os outros resolvam, pois ele já fez muito esforço.', correta: false, feedback: 'Negar ajuda quando se pode ajudar abandona a turma.' }
+        { texto: 'Insiste no design original — é responsabilidade do Dev encontrar como implementar.', correta: false, feedback: 'Ignorar viabilidade técnica produz atrito e atraso para a turma toda.' },
+        { texto: 'Simplifica tudo sozinho sem consultar ninguém, entregando algo genérico.', correta: false, feedback: 'Simplificar sem diálogo pode perder o ponto central da experiência.' },
+        { texto: 'Senta com o Dev para co-criar uma solução que equilibre a experiência desejada e o prazo real.', correta: true, feedback: 'Design e engenharia em diálogo: o resultado é sempre melhor do que sozinhos.' }
       ]
     },
     {
-      titulo: 'Ação 2 — A provocação do inimigo',
-      situacao: 'Um inimigo provoca o Bárbaro para que ataque sozinho, longe do grupo. A raiva sobe. Como ele reage?',
+      titulo: 'Ação 2 — Feedbacks contraditórios',
+      situacao: 'Testes com usuários apontam um caminho, mas a liderança pede o oposto. O UX Designer está no meio. Como conduz?',
       opcoes: [
-        { texto: 'Avança furioso sozinho para mostrar quem é o mais forte.', correta: false, feedback: 'Cair na provocação separa o Bárbaro da turma — exatamente o plano do inimigo.' },
-        { texto: 'Respira, mantém a formação e ataca em conjunto com o grupo.', correta: true, feedback: 'Disciplina em turma: juntos resistem à armadilha.' },
-        { texto: 'Manda o grupo recuar enquanto ele decide tudo sozinho.', correta: false, feedback: 'Tomar o controle sozinho ignora a força da turma.' }
+        { texto: 'Segue a liderança sem questionar — hierarquia acima de tudo.', correta: false, feedback: 'Ceder sem trazer a evidência do usuário é desperdiçar o papel do UX.' },
+        { texto: 'Ignora a liderança e vai com os dados dos usuários, sem comunicar o conflito.', correta: false, feedback: 'Agir sem alinhar cria retrabalho e desconfiança.' },
+        { texto: 'Apresenta os dados dos usuários para a liderança e facilita uma decisão conjunta baseada em evidência.', correta: true, feedback: 'O UX que conecta dados e decisão protege o usuário e alinha a turma.' }
       ]
     },
     {
-      titulo: 'Ação 3 — O aliado ferido',
-      situacao: 'No calor da batalha, um companheiro cai ferido e a vitória individual está ao alcance do Bárbaro. O que ele prioriza?',
+      titulo: 'Ação 3 — Protótipo sem teste',
+      situacao: 'O prazo apertou e o UX precisaria entregar o protótipo sem fazer os testes com usuários reais. O que faz?',
       opcoes: [
-        { texto: 'Ignora o ferido e corre para dar o golpe final e levar a glória.', correta: false, feedback: 'Buscar glória sozinho abandona quem precisa de você.' },
-        { texto: 'Para, protege o aliado caído e chama o grupo para ajudar.', correta: true, feedback: 'Cuidar da turma vem antes do mérito individual. A gente vai de turma!' },
-        { texto: 'Grita com o ferido por ter se descuidado.', correta: false, feedback: 'Culpar quem caiu desmotiva e divide a turma.' }
+        { texto: 'Entrega sem testar e não fala nada para não parecer que ficou devendo.', correta: false, feedback: 'Silenciar o risco coloca a turma em posição vulnerável na entrega.' },
+        { texto: 'Adia a entrega por conta própria sem avisar o time.', correta: false, feedback: 'Decisão unilateral sem comunicar quebra o fluxo da sprint.' },
+        { texto: 'Comunica o risco ao PO e propõe alternativas: teste rápido com colegas ou entrega marcada como hipótese.', correta: true, feedback: 'Transparência sobre risco é parte do trabalho. A turma decide junta.' }
       ]
     }
   ],
 
-  paladino: [
+  po: [
     {
-      titulo: 'Ação 1 — O escudo do grupo',
-      situacao: 'Uma chuva de flechas vem na direção da turma. O Paladino Humano tem o maior escudo. O que ele faz?',
+      titulo: 'Ação 1 — Times em conflito',
+      situacao: 'Dois times divergem sobre qual funcionalidade priorizar na próxima sprint e o debate está esquentando. O PO precisa agir. Como?',
       opcoes: [
-        { texto: 'Protege apenas a si mesmo, garantindo sua própria sobrevivência.', correta: false, feedback: 'Proteger só a si mesmo deixa a turma exposta.' },
-        { texto: 'Posiciona o escudo para cobrir o máximo de companheiros possível.', correta: true, feedback: 'Ser escudo da turma: protege os colegas antes de si mesmo.' },
-        { texto: 'Recua para uma posição segura e observa de longe.', correta: false, feedback: 'Fugir do dever de proteger abandona o grupo.' }
+        { texto: 'Impõe a própria prioridade unilateralmente para encerrar o debate logo.', correta: false, feedback: 'Decisão imposta sem escuta gera resistência e desmotivação.' },
+        { texto: 'Deixa cada time decidir por conta própria para evitar conflito.', correta: false, feedback: 'Ausência de alinhamento resulta em times remando em direções opostas.' },
+        { texto: 'Facilita uma sessão de refinamento com os dois times, trazendo critérios de valor e impacto para decidir juntos.', correta: true, feedback: 'O PO que facilita decisão coletiva constrói times mais autônomos e alinhados.' }
       ]
     },
     {
-      titulo: 'Ação 2 — A missão dividida',
-      situacao: 'O líder pede que o Paladino conduza uma parte da missão sozinho, com autonomia. Surge uma dúvida importante. Como ele age?',
+      titulo: 'Ação 2 — Pressão por prazo',
+      situacao: 'Uma entrega importante está atrasada e a liderança cobra prazo com urgência. O que o PO faz?',
       opcoes: [
-        { texto: 'Toca em frente sozinho com autonomia e pede ajuda à turma no ponto em que tem dúvida.', correta: true, feedback: 'Autonomia com colaboração: confiar em si e na turma ao mesmo tempo.' },
-        { texto: 'Trava completamente e espera alguém resolver tudo por ele.', correta: false, feedback: 'Depender de tudo dos outros não é autonomia.' },
-        { texto: 'Faz tudo por conta própria mesmo na dúvida, sem consultar ninguém.', correta: false, feedback: 'Autonomia não é isolamento; pedir ajuda também é ir de turma.' }
+        { texto: 'Promete uma data para a liderança sem consultar o time técnico.', correta: false, feedback: 'Promessa sem respaldo do time cria expectativas falsas e pressão injusta.' },
+        { texto: 'Culpa o time técnico pelo atraso diante da liderança.', correta: false, feedback: 'Culpar o time quebra a confiança e desintegra a colaboração.' },
+        { texto: 'Conversa com o time, entende os impedimentos reais e comunica à liderança com transparência e proposta concreta.', correta: true, feedback: 'Transparência com proposta é a linguagem que une negócio e técnico.' }
       ]
     },
     {
-      titulo: 'Ação 3 — O voto final',
-      situacao: 'Diante do covil do Dragão, o grupo precisa decidir a estratégia de ataque. O Paladino é respeitado por todos. Como conduz?',
+      titulo: 'Ação 3 — Demanda urgente no meio da sprint',
+      situacao: 'No terceiro dia da sprint, o negócio traz uma demanda urgente que muda tudo. O PO precisa decidir. Como age?',
       opcoes: [
-        { texto: 'Impõe sua estratégia, pois é o mais honrado e merece decidir.', correta: false, feedback: 'Impor a decisão silencia a turma.' },
-        { texto: 'Reúne todos, ouve cada personagem e constrói a estratégia em conjunto.', correta: true, feedback: 'Decidir como turma: a melhor estratégia nasce da soma de todos.' },
-        { texto: 'Deixa cada um atacar quando quiser, sem combinar nada.', correta: false, feedback: 'Falta de combinação dispersa a força da turma.' }
+        { texto: 'Interrompe a sprint imediatamente e muda o backlog sem consultar o time.', correta: false, feedback: 'Mudança unilateral destrói o ritmo e a confiança do time.' },
+        { texto: 'Ignora a demanda do negócio completamente para proteger o time.', correta: false, feedback: 'Ignorar o negócio não é proteger o time — é criar conflito futuro.' },
+        { texto: 'Avalia o impacto com o time, negocia o que pode entrar ou sair e comunica a decisão a todas as partes.', correta: true, feedback: 'O PO que decide com o time e comunica com o negócio é o elo que mantém tudo junto.' }
       ]
     }
   ]

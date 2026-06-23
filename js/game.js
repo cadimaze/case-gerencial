@@ -1,10 +1,10 @@
 // ====================================================================
-//  A GENTE VAI DE TURMA — A Lenda do Dragão
+//  A GENTE VAI DE TURMA — O Incidente em Produção
 //  Lógica do jogo (máquina de estados de telas)
 // ====================================================================
 
-const app = document.getElementById('app');
-const hud = document.getElementById('hud');
+const app   = document.getElementById('app');
+const hud   = document.getElementById('hud');
 const hudBar = document.getElementById('hud-bar');
 const hudValue = document.getElementById('hud-value');
 const hudThreshold = document.getElementById('hud-threshold');
@@ -12,15 +12,15 @@ const hudThreshold = document.getElementById('hud-threshold');
 const state = {
   pontos: 0,
   acertos: 0,
-  round: 0,        // 0,1,2
-  charIndex: 0,    // 0..4
+  round: 0,       // 0, 1, 2
+  charIndex: 0,   // 0..4
   timer: null,
-  respostas: []    // histórico
+  respostas: []
 };
 
 const LETRAS = ['A', 'B', 'C'];
 
-// ---------- Utilidades de tela ----------------------------------------
+// ---------- Tela -------------------------------------------------------
 
 function setScreen(html) {
   const old = app.querySelector('.screen');
@@ -36,7 +36,8 @@ function updateHUD() {
   const pct = (state.pontos / CONFIG.pontuacaoMaxima) * 100;
   hudBar.style.width = pct + '%';
   hudValue.textContent = state.pontos;
-  hudThreshold.style.left = (CONFIG.limiteParaVencer / CONFIG.pontuacaoMaxima * 100) + '%';
+  hudThreshold.style.left =
+    (CONFIG.limiteParaVencer / CONFIG.pontuacaoMaxima * 100) + '%';
 }
 
 function showHUD(show) {
@@ -44,7 +45,7 @@ function showHUD(show) {
   if (show) updateHUD();
 }
 
-// ---------- Estrelas de fundo -----------------------------------------
+// ---------- Partículas de fundo ----------------------------------------
 
 function makeStars(n = 70) {
   const wrap = document.getElementById('stars');
@@ -65,7 +66,7 @@ function makeStars(n = 70) {
 function screenIntro() {
   showHUD(false);
   const heroes = PERSONAGENS.map(p =>
-    `<div>${pixelSVG(p.id, { pixel: 7 })}</div>`
+    `<div>${pixelSVG(p.id, { pixel: 8 })}</div>`
   ).join('');
 
   setScreen(`
@@ -74,24 +75,24 @@ function screenIntro() {
       <h1 class="pixel-title">A Gente Vai de Turma</h1>
       <div class="heroes-row">${heroes}</div>
       <p class="lead">
-        Cinco heróis. Cinco equipes. Um único objetivo: derrotar o <strong>Dragão</strong>.<br/>
-        Mas só há um jeito de vencer — <strong>indo de turma</strong>. A cada decisão, escolha
-        a atitude que reflete confiança, colaboração e o espírito de um só time para acumular
-        <strong>Pontos de Heroísmo</strong>.
+        Cinco especialistas. Cinco equipes. Um único objetivo: conter o
+        <strong>Incidente em Produção</strong> antes que ele derrube tudo.<br/>
+        Cada decisão certa acumula <strong>Pontos de Heroísmo</strong>.
+        Mas só uma postura vence — <strong>ir de turma</strong>.
       </p>
-      <button class="btn" onclick="screenRoster()">Conhecer os Heróis ⚔️</button>
+      <button class="btn" onclick="screenRoster()">Conhecer o Time ⚔️</button>
     </section>
   `);
 }
 
 // ====================================================================
-//  TELA 2 — APRESENTAÇÃO DOS PERSONAGENS
+//  TELA 2 — APRESENTAÇÃO DO TIME
 // ====================================================================
 function screenRoster() {
   showHUD(false);
   const cards = PERSONAGENS.map((p, i) => `
     <div class="hero-card panel" style="--char:${p.cor}; animation-delay:${i * 0.08}s">
-      ${pixelSVG(p.id, { pixel: 6 })}
+      ${pixelSVG(p.id, { pixel: 7 })}
       <div class="team">${p.equipe}</div>
       <div class="name">${p.nome}</div>
       <div class="epithet">${p.epiteto}</div>
@@ -101,8 +102,11 @@ function screenRoster() {
 
   setScreen(`
     <section class="screen roster">
-      <h1 class="pixel-title">A Turma</h1>
-      <p class="lead">Cada equipe controla um herói. Em cada uma das 3 rodadas, sua equipe terá uma decisão a tomar.</p>
+      <h1 class="pixel-title">O Time</h1>
+      <p class="lead">
+        Cada equipe controla um especialista. Em cada uma das 3 rodadas,
+        sua equipe enfrentará uma situação real do dia a dia.
+      </p>
       <div class="roster-grid">${cards}</div>
       <div class="actions">
         <button class="btn" onclick="startRound(0)">Começar a Jornada 🗺️</button>
@@ -115,15 +119,17 @@ function screenRoster() {
 //  TRANSIÇÃO DE RODADA
 // ====================================================================
 function startRound(r) {
-  state.round = r;
+  state.round     = r;
   state.charIndex = 0;
   showHUD(false);
-  const titulos = ['A Jornada Começa', 'O Caminho se Estreita', 'Diante do Covil'];
+
+  const titulos = ['O Alerta Chega', 'A Crise Escala', 'O Momento Decisivo'];
   const subs = [
-    'Rodada 1 — A primeira decisão de cada equipe',
-    'Rodada 2 — A turma é testada',
-    'Rodada 3 — A última escolha antes do Dragão'
+    'Rodada 1 — Primeira decisão de cada especialista',
+    'Rodada 2 — A pressão aumenta',
+    'Rodada 3 — A última chance antes do Incidente'
   ];
+
   setScreen(`
     <section class="screen round-intro">
       <div class="big">Rodada ${r + 1}</div>
@@ -140,7 +146,7 @@ function startRound(r) {
 //  TELA DE AÇÃO (pergunta)
 // ====================================================================
 function screenAction() {
-  const p = PERSONAGENS[state.charIndex];
+  const p       = PERSONAGENS[state.charIndex];
   const cenario = CENARIOS[p.id][state.round];
   showHUD(true);
 
@@ -155,7 +161,7 @@ function screenAction() {
     <section class="screen action-screen" style="--char:${p.cor}">
       <aside class="action-hero panel">
         <div class="round-tag">Rodada ${state.round + 1} · ${state.charIndex + 1}/5</div>
-        ${pixelSVG(p.id, { pixel: 7 })}
+        ${pixelSVG(p.id, { pixel: 8 })}
         <div class="name">${p.nome}</div>
         <div class="team">${p.equipe}</div>
         <div class="timer" id="timer">${CONFIG.tempoDiscussao}</div>
@@ -187,34 +193,34 @@ function startTimer() {
     if (!el.isConnected) { clearInterval(state.timer); return; }
     el.textContent = Math.max(t, 0);
     if (t <= 10) el.classList.add('low');
-    if (t <= 0) { clearInterval(state.timer); }
+    if (t <= 0)  clearInterval(state.timer);
   }, 1000);
 }
 
 // ---------- Resposta --------------------------------------------------
 function answer(i) {
   clearInterval(state.timer);
-  const p = PERSONAGENS[state.charIndex];
-  const cenario = CENARIOS[p.id][state.round];
-  const opEls = document.querySelectorAll('.option');
-  const optionsWrap = document.getElementById('options');
+
+  const p            = PERSONAGENS[state.charIndex];
+  const cenario      = CENARIOS[p.id][state.round];
+  const optionsWrap  = document.getElementById('options');
   if (optionsWrap.classList.contains('locked')) return;
   optionsWrap.classList.add('locked');
 
-  const acertou = !!cenario.opcoes[i].correta;
-  let correctIndex = cenario.opcoes.findIndex(o => o.correta);
+  const acertou      = !!cenario.opcoes[i].correta;
+  const correctIndex = cenario.opcoes.findIndex(o => o.correta);
+  const opEls        = document.querySelectorAll('.option');
 
   opEls.forEach((el, idx) => {
     el.classList.add('locked');
     if (idx === correctIndex) el.classList.add('correct');
-    else if (idx === i) el.classList.add('wrong');
-    else el.classList.add('dim');
+    else if (idx === i)       el.classList.add('wrong');
+    else                      el.classList.add('dim');
   });
 
-  // pontos
   if (acertou) {
-    state.pontos += CONFIG.pontosPorAcerto;
-    state.acertos++;
+    state.pontos  += CONFIG.pontosPorAcerto;
+    state.acertos += 1;
     floatPoints();
   }
   updateHUD();
@@ -222,28 +228,33 @@ function answer(i) {
 
   // feedback
   const fb = document.getElementById('feedback');
-  const opChosen = cenario.opcoes[i];
   fb.className = 'feedback panel show ' + (acertou ? 'good' : 'bad');
   fb.innerHTML = `
     <span class="emoji">${acertou ? '🛡️' : '💔'}</span>
     <span>
-      ${acertou ? '<span class="pts">+' + CONFIG.pontosPorAcerto + ' Heroísmo!</span> ' : ''}
-      ${opChosen.feedback}
-      ${!acertou ? '<br/><em style="color:var(--gold-soft)">Resposta alinhada: ' + LETRAS[correctIndex] + ') ' + cenario.opcoes[correctIndex].texto + '</em>' : ''}
+      ${acertou ? `<span class="pts">+${CONFIG.pontosPorAcerto} Heroísmo!</span> ` : ''}
+      ${cenario.opcoes[i].feedback}
+      ${!acertou
+        ? `<br/><em style="color:var(--gold-soft)">Resposta alinhada: ${LETRAS[correctIndex]}) ${cenario.opcoes[correctIndex].texto}</em>`
+        : ''}
     </span>
   `;
 
-  // próximo
-  const footer = document.getElementById('footer');
-  const isLastChar = state.charIndex >= PERSONAGENS.length - 1;
+  // botão próximo
+  const footer      = document.getElementById('footer');
+  const isLastChar  = state.charIndex >= PERSONAGENS.length - 1;
   const isLastRound = state.round >= 2;
+
   let label, action;
   if (!isLastChar) {
-    label = 'Próxima Equipe ▶'; action = 'nextChar()';
+    label = 'Próxima Equipe ▶';
+    action = 'nextChar()';
   } else if (!isLastRound) {
-    label = 'Próxima Rodada ▶▶'; action = 'startRound(' + (state.round + 1) + ')';
+    label = 'Próxima Rodada ▶▶';
+    action = `startRound(${state.round + 1})`;
   } else {
-    label = 'Enfrentar o Dragão 🐉'; action = 'screenFinale()';
+    label = 'Ver Resultado Final 📊';
+    action = 'screenPreBattle()';
   }
   footer.innerHTML = `<button class="btn" onclick="${action}">${label}</button>`;
 }
@@ -255,18 +266,80 @@ function nextChar() {
 
 function floatPoints() {
   const hero = document.querySelector('.action-hero');
-  const r = hero ? hero.getBoundingClientRect() : { left: window.innerWidth / 2, top: 120, width: 0 };
+  const r = hero
+    ? hero.getBoundingClientRect()
+    : { left: window.innerWidth / 2, top: 120, width: 0 };
   const el = document.createElement('div');
   el.className = 'float-pts';
   el.textContent = '+' + CONFIG.pontosPorAcerto;
   el.style.left = (r.left + r.width / 2 - 20) + 'px';
-  el.style.top = (r.top + 40) + 'px';
+  el.style.top  = (r.top + 40) + 'px';
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 1300);
 }
 
 // ====================================================================
-//  TELA FINAL — BATALHA CONTRA O DRAGÃO
+//  TELA PRÉ-BATALHA — placar geral + botão de enfrentar o incidente
+// ====================================================================
+function screenPreBattle() {
+  showHUD(false);
+  clearInterval(state.timer);
+
+  const venceu  = state.pontos >= CONFIG.limiteParaVencer;
+  const faltou  = CONFIG.limiteParaVencer - state.pontos;
+  const pct     = Math.round((state.pontos / CONFIG.pontuacaoMaxima) * 100);
+  const statusCor  = venceu ? 'var(--green)' : '#ff9a3c';
+  const statusIcon = venceu ? '⚡' : '⚠️';
+  const statusMsg  = venceu
+    ? `Com <strong>${state.pontos}</strong> pontos, o time está pronto para o confronto!`
+    : `Com <strong>${state.pontos}</strong> pontos, faltam <strong>${faltou}</strong> para a meta — mas é hora de agir!`;
+
+  // mini-placar por personagem
+  const miniCards = PERSONAGENS.map(p => {
+    const rs = state.respostas.filter(r => r.char === p.id);
+    const pts = rs.filter(r => r.acertou).length * CONFIG.pontosPorAcerto;
+    const stars = rs.map(r => r.acertou ? '★' : '☆').join('');
+    return `
+      <div class="pre-battle-card panel" style="--char:${p.cor}">
+        ${pixelSVG(p.id, { pixel: 5, idle: false })}
+        <div class="pbc-name">${p.nome}</div>
+        <div class="pbc-stars">${stars}</div>
+        <div class="pbc-pts" style="color:${p.cor}">${pts} pts</div>
+      </div>`;
+  }).join('');
+
+  setScreen(`
+    <section class="screen pre-battle">
+      <h2 class="pixel-title" style="text-align:center; margin-bottom:6px">Placar Final da Turma</h2>
+
+      <div class="pre-battle-cards">${miniCards}</div>
+
+      <div class="pre-battle-total panel">
+        <div class="pbt-bar-wrap">
+          <div class="pbt-bar" style="width:${pct}%; background: ${venceu ? 'linear-gradient(90deg,var(--gold),var(--green))' : 'linear-gradient(90deg,var(--gold),#ff9a3c)'}"></div>
+          <div class="pbt-threshold"></div>
+        </div>
+        <div class="pbt-numbers">
+          <span style="color:${statusCor}; font-family:var(--pixel); font-size:clamp(18px,3vw,30px)">${statusIcon} ${state.pontos}</span>
+          <span style="color:var(--ink-soft); font-size:15px">/ ${CONFIG.pontuacaoMaxima} Pontos de Heroísmo</span>
+        </div>
+        <p class="pbt-msg">${statusMsg}</p>
+      </div>
+
+      <div class="pre-battle-action">
+        <div class="incident-warning">
+          ${pixelSVG('incident', { pixel: 7, idle: true })}
+        </div>
+        <button class="btn btn-incident" onclick="screenFinale()">
+          ⚠️ Enfrentar o Incidente em Produção
+        </button>
+      </div>
+    </section>
+  `);
+}
+
+// ====================================================================
+//  TELA FINAL — BATALHA CONTRA O INCIDENTE EM PRODUÇÃO
 // ====================================================================
 function screenFinale() {
   showHUD(false);
@@ -276,33 +349,36 @@ function screenFinale() {
 
   setScreen(`
     <section class="screen finale">
-      <h2 class="pixel-title">O Covil do Dragão</h2>
+      <h2 class="pixel-title">Incidente em Produção</h2>
       <div class="battle-stage panel">
         <div class="battle-party">${party}</div>
-        <div class="battle-dragon" id="dragon">${pixelSVG('dragon', { pixel: 6, idle: false })}</div>
+        <div class="battle-incident" id="incident">${pixelSVG('incident', { pixel: 6, idle: false })}</div>
       </div>
       <div id="finale-result"></div>
     </section>
   `);
 
-  // Sequência da batalha
   setTimeout(() => runBattle(venceu), 700);
 }
 
 function runBattle(venceu) {
-  const dragon = document.getElementById('dragon');
-  const stage = document.querySelector('.battle-stage');
+  const incident = document.getElementById('incident');
+  const stage    = document.querySelector('.battle-stage');
 
-  // dispara feixes de ataque da party em direção ao dragão
   let shots = 0;
   const totalShots = Math.max(3, Math.round(state.acertos / 2));
+
   const fire = setInterval(() => {
     shootBeam(stage);
-    if (dragon) { dragon.classList.remove('shake'); void dragon.offsetWidth; dragon.classList.add('shake'); }
+    if (incident) {
+      incident.classList.remove('shake');
+      void incident.offsetWidth;
+      incident.classList.add('shake');
+    }
     shots++;
     if (shots >= totalShots) {
       clearInterval(fire);
-      setTimeout(() => revealResult(venceu, dragon), 700);
+      setTimeout(() => revealResult(venceu, incident), 700);
     }
   }, 520);
 }
@@ -314,41 +390,43 @@ function shootBeam(stage) {
   const r = stage.getBoundingClientRect();
   const startY = r.height * (0.45 + Math.random() * 0.25);
   beam.style.left = '24%';
-  beam.style.top = startY + 'px';
+  beam.style.top  = startY + 'px';
   beam.style.width = '0px';
   stage.appendChild(beam);
   requestAnimationFrame(() => {
-    beam.style.transition = 'width .35s ease, left .35s ease';
+    beam.style.transition = 'width .35s ease';
     beam.style.width = '52%';
   });
   setTimeout(() => beam.remove(), 600);
 }
 
-function revealResult(venceu, dragon) {
+function revealResult(venceu, incident) {
   const box = document.getElementById('finale-result');
+
   if (venceu) {
-    if (dragon) dragon.classList.add('flee');
+    if (incident) incident.classList.add('flee');
     launchConfetti();
     box.innerHTML = `
-      <div class="result win">VITÓRIA!</div>
+      <div class="result win">INCIDENTE RESOLVIDO!</div>
       <div class="score-line">A turma reuniu <strong>${state.pontos}</strong> de ${CONFIG.pontuacaoMaxima} Pontos de Heroísmo</div>
-      <div class="score-line">(meta: ${CONFIG.limiteParaVencer})</div>
       <p class="message">
-        O Dragão foi derrotado! E não por força isolada — mas porque cada herói confiou no outro,
-        pediu e ofereceu ajuda, e agiu como <strong>um só time</strong>. É assim que a gente vai de turma. 🎉
+        O Incidente em Produção foi contido! Não pela força de um só —
+        mas porque cada especialista comunicou, pediu ajuda e agiu junto.
+        É exatamente assim que <strong>a gente vai de turma</strong>. 🎉
       </p>
       <button class="btn secondary" onclick="screenIntro()">Jogar Novamente 🔁</button>
     `;
   } else {
-    if (dragon) dragon.classList.add('victory-dragon');
+    if (incident) incident.classList.add('victory-incident');
     const faltou = CONFIG.limiteParaVencer - state.pontos;
     box.innerHTML = `
-      <div class="result lose">QUASE LÁ...</div>
+      <div class="result lose">INCIDENTE PERSISTE...</div>
       <div class="score-line">A turma reuniu <strong>${state.pontos}</strong> de ${CONFIG.pontuacaoMaxima} Pontos de Heroísmo</div>
-      <div class="score-line">Faltaram <strong>${faltou}</strong> pontos para a meta de ${CONFIG.limiteParaVencer}</div>
+      <div class="score-line">Faltaram <strong>${faltou}</strong> pontos para atingir a meta de ${CONFIG.limiteParaVencer}</div>
       <p class="message">
-        O Dragão resistiu desta vez. A lição fica: cada decisão de ir de turma — confiar, colaborar,
-        pedir e dar ajuda — soma forças para os desafios reais. Bora tentar de novo, juntos! 💪
+        O incidente resistiu desta vez. A lição fica: cada decisão de
+        ir de turma — comunicar, colaborar, pedir e dar ajuda — é o que
+        transforma crises em vitórias coletivas. Bora tentar de novo! 💪
       </p>
       <button class="btn secondary" onclick="screenIntro()">Tentar Novamente 🔁</button>
     `;
@@ -360,11 +438,11 @@ function launchConfetti() {
   for (let i = 0; i < 90; i++) {
     const c = document.createElement('div');
     c.className = 'confetti';
-    c.style.left = Math.random() * 100 + 'vw';
+    c.style.left       = Math.random() * 100 + 'vw';
     c.style.background = cores[Math.floor(Math.random() * cores.length)];
     c.style.setProperty('--d', (2 + Math.random() * 2.5) + 's');
     c.style.animationDelay = (Math.random() * 0.6) + 's';
-    c.style.transform = `rotate(${Math.random() * 360}deg)`;
+    c.style.transform  = `rotate(${Math.random() * 360}deg)`;
     document.body.appendChild(c);
     setTimeout(() => c.remove(), 5000);
   }
@@ -381,10 +459,11 @@ document.getElementById('btn-fullscreen').addEventListener('click', () => {
   }
 });
 
-// Reinício total das pontuações ao voltar para a intro
+// Reinício completo ao voltar para intro
 const _origIntro = screenIntro;
 screenIntro = function () {
-  state.pontos = 0; state.acertos = 0; state.round = 0; state.charIndex = 0; state.respostas = [];
+  state.pontos = 0; state.acertos = 0;
+  state.round  = 0; state.charIndex = 0; state.respostas = [];
   updateHUD();
   _origIntro();
 };
