@@ -1,276 +1,419 @@
 // ====================================================================
-//  Pixel Art — renderizador e arte dos personagens corporativos
-//  Grade maior (~14×20) para mais detalhe e clareza visual.
-//  '.' = transparente. A largura é o max de todas as linhas.
+//  Pixel Art — personagens corporativos redesenhados
+//  Grade 18×34 — silhuetas únicas, proporções verticais,
+//  rostos distintos, props detalhados com sombreamento
 // ====================================================================
 
 const PALETTE_BASE = {
-  k: '#241c33',  // contorno escuro
-  s: '#f2c79b',  // pele
+  k: '#1a1033',  // contorno
+  s: '#f5c9a0',  // pele clara
   S: '#d89e6e',  // pele sombra
-  e: '#1a1033',  // olhos
-  W: '#f5f5f5',  // branco
+  D: '#b07345',  // pele sombra profunda
+  e: '#1a1033',  // pupila
+  i: '#4a6fa5',  // íris azul
+  E: '#2a1a0a',  // sobrancelha
+  W: '#ffffff',  // branco
+  w: '#e8e8e8',  // branco sombra
   m: '#c9d1d9',  // metal/prata
   M: '#8b95a1',  // metal sombra
-  g: '#f1b30b',  // dourado/amarelo
-  w: '#8a5a2b',  // madeira/marrom
-  b: '#5e3a1c',  // marrom escuro
-  h: '#3d2b1a',  // cabelo escuro
+  g: '#f1b30b',  // dourado
+  G: '#b8890a',  // dourado sombra
+  r: '#e05c5c',  // vermelho
+  R: '#a83030',  // vermelho sombra
+  q: '#34c759',  // verde
+  Q: '#1f8a3d',  // verde sombra
   n: '#56ccf2',  // azul claro
-  r: '#d64545',  // vermelho
-  q: '#34c759',  // verde código
-  t: '#fdf6e3',  // creme
-  C: '#1a1033',  // tela escura
-  L: '#a0aab4',  // laptop/prata médio
-  P: '#2d3748',  // painel escuro
+  N: '#2d86b0',  // azul escuro
+  h: '#2a1f1a',  // cabelo preto
+  H: '#4d3828',  // cabelo reflexo
+  b: '#5e3a1c',  // marrom escuro
+  C: '#0d1117',  // tela preta
+  t: '#fef3c7',  // creme/dente
+  p: '#f472b6',  // rosa
+  P: '#c026a0',  // rosa escuro
+  v: '#c084fc',  // lilás
+  V: '#7c3aed',  // roxo profundo
 };
-
-// ===== ARTES ==========================================================
 
 const ART = {
 
-  // ------------------------------------------------------------------
-  // DEV FRONT-END — capuz azul, segura laptop aberto com pixels coloridos
-  // ------------------------------------------------------------------
+  // ================================================================
+  // DEV FRONT-END
+  // Silhueta: fones de ouvido GRANDES saindo lateralmente
+  // Cabelo espetado. Hoodie azul. Laptop com pixels RGB na tela.
+  // ================================================================
   frontend: {
     palette: {
-      o: '#2f80ed',  // capuz azul
-      O: '#1c5fc0',  // capuz sombra
-      h: '#3d2b1a',  // cabelo
-      L: '#c9d1d9',  // laptop prata
-      C: '#1a1033',  // tela escura
-      r: '#e05c5c',  // pixel vermelho
-      q: '#34c759',  // pixel verde
-      n: '#56ccf2',  // pixel azul claro
-      g: '#f1b30b',  // pixel amarelo
+      o: '#2f80ed',  // hoodie azul
+      O: '#1c5fc0',  // hoodie sombra
+      A: '#6db3f5',  // hoodie highlight
+      f: '#1a1a2e',  // fone escuro
+      F: '#2d2d5e',  // fone highlight
+      L: '#dce3ea',  // laptop prata
+      l: '#a0aab4',  // laptop sombra
+      C: '#0d1117',  // tela
     },
     grid: [
-      '....khhhhhhk....',     // cabelo topo
-      '...khssssssshk...',    // rosto
-      '...khsesssseshk..',    // olhos
-      '...khssssssshk...',    // rosto baixo
-      '....khhhhhhk....',     // queixo
-      '.....oooooooo...',     // gola capuz
-      '....oossssssoo..',     // pescoço + ombros
-      '....ossssssso...',     // torso
-      '...oLLLLLLLLoo..',    // laptop aberto topo
-      '...oLCrqnCrqLoo.',    // tela: pixels coloridos
-      '...oLCngrCngLoo.',    // tela linha 2
-      '...oLCqCnqCqLoo.',    // tela linha 3
-      '...oLLLLLLLLoo..',    // teclado laptop
-      '....ooooooooo...',     // cintura
-      '....oOOOOOOoo...',    // quadril
-      '.....OOO.OOO....',    // pernas
-      '.....OOO.OOO....',
-      '.....OOO.OOO....',
-      '....kkkkkkkkk...',    // sapatos
+      // ── cabelo espetado ──────────────────────
+      '....khhHhhhHhhhk....',   // topo espetado
+      '...khhHhHhHhHhhhk...',  // espetos
+      // ── cabeça com fones saindo dos lados ────
+      'ffk.khhsssssshhk.kff',  // fone esq | rosto | fone dir
+      'fFk.khsssssssshk.kFf',  // fone corpo
+      'fFk.khsEssssEshk.kFf',  // sobrancelhas
+      'fFk.khssiessieshk.kFf', // olhos com íris
+      'fFk.khssssssssshk.kFf', // mid face
+      'fFk.khssDssssDshk.kFf', // nariz
+      'ffk.khssSttsssshk.kff', // boca / dente
+      '....khhhhhhhhhhk.....',  // queixo
+      // ── pescoço ──────────────────────────────
+      '.....ksssssssk......',
+      // ── hoodie + laptop ──────────────────────
+      '....oAoossssooAo....',  // gola
+      '...oAooossssooooAo...',  // ombros
+      '..oAoossssssssooAo..',   // torso com pele braços
+      '..oAoLLLLLLLLLooAo..',  // laptop borda topo
+      '..oAoLCrrqqnnppLooAo',  // tela: pixels R G B P
+      '..oAoLCqnnpprrqLooAo',  // pixels linha 2
+      '..oAoLCnnpprqgnLooAo',  // pixels linha 3
+      '..oAoLCqqrrnnppLooAo',  // pixels linha 4
+      '..oAoLlllllllllooAo..',  // teclado
+      '...oAoooooooooooAo...',  // cintura
+      // ── pernas ───────────────────────────────
+      '....OOOOOOOOOOOo.....',  // quadril
+      '.....OO.......OO.....',  // coxas
+      '.....OO.......OO.....',
+      '.....OO.......OO.....',
+      '.....OO.......OO.....',
+      '.....OO.......OO.....',
+      '....kOOk.....kOOk....',  // tornozelo
+      '...kkkkkk...kkkkkk...',  // sapatos
     ]
   },
 
-  // ------------------------------------------------------------------
-  // DEV BACK-END — moletom verde escuro, óculos, terminal com código
-  // ------------------------------------------------------------------
+  // ================================================================
+  // DEV BACK-END
+  // Silhueta: óculos REDONDOS bem marcados, cabelo curto lateral
+  // Moletom verde escuro. Terminal com código verde e prompt.
+  // ================================================================
   backend: {
     palette: {
-      o: '#1f6b3e',  // moletom verde escuro
-      O: '#144d2c',  // moletom sombra
-      h: '#3d2b1a',  // cabelo
-      f: '#9aa4b0',  // armação óculos
-      C: '#0d1117',  // tela terminal
-      q: '#34c759',  // código verde
-      g: '#f1b30b',  // prompt amarelo
+      o: '#1f6b3e',  // moletom verde
+      O: '#144d2c',  // verde sombra
+      A: '#2d9e5c',  // verde highlight
+      G2:'#3dba72',  // verde suave óculos/reflexo
+      f: '#9aa4b0',  // armação óculos prata
+      F: '#dce3ea',  // lente óculos
+      C: '#0d1117',  // terminal tela
+      q: '#39ff6a',  // código verde brilhante
+      x: '#1a8c40',  // código verde sombra
+      g: '#ffd166',  // prompt amarelo ($)
+      c: '#56ccf2',  // comentário azul
+      d: '#a0b0c8',  // barba / detalhe
     },
     grid: [
-      '....khhhhhhhk...',     // cabelo
-      '...khssssssshk..',     // rosto
-      '...khffsfsffhk..',     // óculos (f=armação)
-      '...khfsesefhk...',     // olhos através dos óculos
-      '...khssssssshk..',     // rosto baixo
-      '....khhhhhhk....',     // queixo
-      '.....oooooooo...',     // gola
-      '....oossssssoo..',     // ombros
-      '....oCCCCCCCoo..',     // terminal topo
-      '....oCgCCCCCoo..',     // prompt $ amarelo
-      '....oCqqqqCCoo..',     // código verde linha 1
-      '....oCCqqCqCoo..',     // código linha 2
-      '....oCCCCCCCoo..',     // terminal base
-      '....ooooooooo...',     // cintura
-      '....oOOOOOOoo...',    // quadril
-      '.....OOO.OOO....',
-      '.....OOO.OOO....',
-      '.....OOO.OOO....',
-      '....kkkkkkkkk...',
+      // ── cabelo curto lateral, reto no topo ───
+      '....khhhhhhhhhhk.....',  // topo reto
+      '...khhhhhhhhhhhhhk...',  // cabelo
+      // ── rosto com óculos redondos grandes ────
+      '...khssssssssssshk...',  // testa
+      '...khsEEsssssEEshk...',  // sobrancelhas
+      '...khsfffssfffffshk..',  // armação óculos — linha topo
+      '...khsFFesFseFfshk...',  // lentes + olhos
+      '...khsfffssfffffshk..',  // armação óculos — linha base
+      '...khssssssssssshk...',  // entre óculos e boca
+      '...khssSsssssSsshk...',  // nariz
+      '...khssdddddddshk....',  // barba rala
+      '....khhhhhhhhhhk.....',  // queixo
+      // ── pescoço ──────────────────────────────
+      '.....sssssssss.......',
+      // ── moletom + terminal ───────────────────
+      '....oAoossssooAo.....',  // gola
+      '...oAooossssooooAo...',  // ombros
+      '..oAoooooooooooooAo..',  // torso
+      '..oAooCCCCCCCCCoooAo',  // terminal moldura
+      '..oAooCgCCCCCCCCoooAo', // prompt $
+      '..oAooCqxxqxqqCCoooAo', // código verde
+      '..oAooCxqqxCxqxCoooAo', // código linha 2
+      '..oAooCcCcCcCcCCoooAo', // comentário azul
+      '..oAooCCCCCCCCCCoooAo', // terminal base
+      '...oAoooooooooooAo...',  // cintura
+      // ── pernas ───────────────────────────────
+      '....OOOOOOOOOOOo.....',
+      '.....OO.......OO.....',
+      '.....OO.......OO.....',
+      '.....OO.......OO.....',
+      '.....OO.......OO.....',
+      '.....OO.......OO.....',
+      '....kOOk.....kOOk....',
+      '...kkkkkk...kkkkkk...',
     ]
   },
 
-  // ------------------------------------------------------------------
-  // ENGENHEIRO DE DADOS — outfit roxo, segura gráfico de barras
-  // ------------------------------------------------------------------
+  // ================================================================
+  // ENGENHEIRO DE DADOS
+  // Silhueta: AFRO grande, bem mais largo que os ombros
+  // Outfit roxo. Clipboard com gráfico de barras colorido.
+  // ================================================================
   dados: {
     palette: {
       o: '#7b2fbe',  // roupa roxa
-      O: '#5a1f8f',  // roupa sombra
-      h: '#3d2b1a',  // cabelo
-      g: '#f1b30b',  // barra alta (ouro)
-      r: '#e05c5c',  // barra média (vermelho)
-      n: '#56ccf2',  // barra baixa (azul)
-      C: '#0d1117',  // fundo gráfico
-      W: '#f0f0f0',  // eixo do gráfico
+      O: '#5a1f8f',  // roxa sombra
+      A: '#a85de0',  // roxa highlight
+      h: '#1a1a1a',  // afro preto
+      H: '#3d3020',  // afro reflexo
+      J: '#2d2010',  // afro sombra profunda
+      B: '#7c5c3a',  // clipboard borda
+      c: '#f5f0e8',  // clipboard fundo creme
+      G2:'#f1b30b',  // barra amarela
+      Z: '#b8890a',  // barra amarela sombra
+      r: '#e05c5c',  // barra vermelha
+      n: '#56ccf2',  // barra azul
+      q: '#34c759',  // barra verde
+      L: '#ff6b35',  // linha tendência laranja
+      x: '#e0e0e0',  // eixo do gráfico
     },
     grid: [
-      '....khhhhhhhhk..',     // cabelo
-      '...khssssssssshk.',    // rosto
-      '...khsesssseshk..',    // olhos
-      '...khssssssshk...',    // rosto baixo
-      '....khhhhhhk....',     // queixo
-      '.....oooooooo...',     // gola
-      '....oossssssoo..',     // ombros
-      '....ossssssso...',     // torso
-      '...oCCCCCCCCoo..',    // fundo do gráfico topo
-      '...oCCgCCrCCoo..',    // barras (g=alta, r=média)
-      '...oCCgCCrCnoo..',    // barras crescendo
-      '...oCCgCCrCnoo..',    // barras
-      '...oCCgCgrCnoo..',    // barras mais completas
-      '...oWWWWWWWWoo..',    // eixo X branco
-      '....ooooooooo...',    // cintura
-      '....oOOOOOOoo...',
-      '.....OOO.OOO....',
-      '.....OOO.OOO....',
-      '.....OOO.OOO....',
-      '....kkkkkkkkk...',
+      // ── afro MUITO largo ─────────────────────
+      '.kJhHhHhHhHhHhHhHhJk',  // afro topo
+      'kJhHhHhHhHhHhHhHhHhJk', // afro largo (22 wide!)
+      'kJhHssssssssssssHhHJk', // afro encontra testa
+      'kJhHssssssssssssHhHJk', // testa
+      // ── rosto ────────────────────────────────
+      'kJhHsEEsssssssEEsHhJk', // sobrancelhas
+      'kJhHssiesissiesisHhJk', // olhos com íris
+      'kJhHssssssssssssHhJk',  // mid face
+      'kJhHsssSDsssDSssHhJk',  // nariz com sombra
+      'kJhHssssttttssssHhJk',  // sorriso largo
+      '.kJhHhhhhhhhhhhHhJk.',  // queixo
+      // ── pescoço ──────────────────────────────
+      '.......sssssss.......',
+      // ── roupa + clipboard ────────────────────
+      '......oAoooooAo......',  // gola
+      '.....oAooooooooAo....',  // ombros
+      '....oAooBBBBBBooooAo.',  // clipboard moldura
+      '....oAooBccccccBooAo.',  // clipboard fundo
+      '....oAooBcG2G2crccBooAo', // barras: amarela e vermelha
+      '....oAooBcG2G2crccnBooAo',// barras + azul
+      '....oAooBcG2ZZcrcZnBooAo',// sombreamento barras
+      '....oAooBcG2G2crZcnqBooAo',// verde entra
+      '....oAooBcLLLLLLLLBooAo.',  // linha tendência
+      '....oAooBcxxxxxxxxBooAo.',  // eixo X
+      '....oAooBBBBBBBBBBooAo.',  // clipboard base
+      '.....oAooooooooooAo.....',  // cintura
+      // ── pernas ───────────────────────────────
+      '......OOOOOOOOOOo......',
+      '.......OO.......OO.....',
+      '.......OO.......OO.....',
+      '.......OO.......OO.....',
+      '.......OO.......OO.....',
+      '......kOOk.....kOOk....',
+      '.....kkkkkk...kkkkkk...',
     ]
   },
 
-  // ------------------------------------------------------------------
-  // UX DESIGNER — outfit laranja, tablet com esboço na tela
-  // ------------------------------------------------------------------
+  // ================================================================
+  // UX DESIGNER
+  // Silhueta: coque ALTO saindo do topo da cabeça (bump visível)
+  // Outfit laranja. Tablet com wireframe. Stylus na mão.
+  // ================================================================
   ux: {
     palette: {
       o: '#c75000',  // outfit laranja
-      O: '#9c3d00',  // outfit sombra
-      h: '#1a1033',  // cabelo escuro (diferente dos outros)
-      m: '#d0d7de',  // tablet prata
-      W: '#f8f8f8',  // tela do tablet branca
-      r: '#e05c5c',  // esboço vermelho/wireframe
-      p: '#b388ff',  // esboço lilás
-      y: '#f9e04b',  // stylus amarelo
+      O: '#9c3d00',  // laranja sombra
+      A: '#e87034',  // laranja highlight
+      h: '#1a1033',  // cabelo preto
+      H: '#2d1a4d',  // cabelo roxo-escuro
+      u: '#3d1a5a',  // coque escuro
+      U: '#6b3a8a',  // coque highlight
+      m: '#dce3ea',  // tablet borda
+      c: '#f8fbff',  // tablet tela branca
+      x: '#b0bec9',  // tablet sombra
+      r: '#e05c5c',  // wireframe coral
+      R: '#c03030',  // wireframe sombra
+      n: '#56ccf2',  // wireframe azul
+      v: '#c084fc',  // wireframe lilás
+      y: '#fde68a',  // stylus amarelo
+      Y: '#c9930a',  // stylus sombra
     },
     grid: [
-      '....khhhhhhhhk..',     // cabelo diferente (comprido)
-      '....khhhhhhhkhk.',     // cabelo laterais
-      '...khssssssshk..',     // rosto
-      '...khsesssseshk.',     // olhos
-      '...khssssssshk..',     // rosto baixo
-      '....kkhhhhkk....',     // queixo
-      '.....oooooooo...',     // gola
-      '....oossssssoo..',     // ombros
-      '....ossssssso...',     // torso
-      '...ommmmmmmmoo..',    // tablet moldura
-      '...omWWWWWWmoo..',    // tela branca
-      '...omWrrrpWmoo..',    // esboço wireframe
-      '...omWWrWpWmoo..',    // esboço linha 2
-      '...ommmmmmmoo..',     // tablet base
-      '....ooooooooo...',    // cintura
-      '....oOOOOOOoo...',
-      '.....OOO.OOO....',
-      '.....OOO.OOO....',
-      '.....OOO.OOO....',
-      '....kkkkkkkkk...',
+      // ── coque alto (bump acima da cabeça) ────
+      '......kuUUUUUUuk......',  // coque topo
+      '.....kuUuuuuuuuUuk....',  // coque corpo
+      '.....kUuhhhhhhhuUk....',  // coque base + transição
+      // ── cabeça ───────────────────────────────
+      '....khhhhhsssshhhhk...',  // testa
+      '....khhsssssssssshhk..',  // rosto topo
+      '....khhssEsssssEsshhk.',  // sobrancelhas finas
+      '....khhsssiessiesshhk.',  // olhos amendoados
+      '....khhssssssssssshhk.',  // mid face
+      '....khhsssDssssDssshhk',  // nariz
+      '....khhssssWWWsssshhk.',  // sorriso
+      '.....khhhhhhhhhhhhk...',  // queixo
+      // ── pescoço ──────────────────────────────
+      '......ssssssssss......',
+      // ── outfit + tablet ──────────────────────
+      '.....oAoossssooAo.....',  // gola
+      '....oAooossssooooAo...',  // ombros
+      '...oAooommmmmmmoooAo...',  // tablet moldura topo
+      '...oAoooxccccccxooAo...',  // tablet tela
+      '...oAoooxcrrrrrcxooAo..',  // wireframe retângulo
+      '...oAoooxcrvvvrcxooAo..',  // wireframe interior lilás
+      '...oAoooxcrnnnrcxooAo..',  // wireframe + azul
+      '...oAoooxcccccccxooAo..',  // tela base
+      '...oAooommmmmmmoooAo...',  // tablet moldura baixo
+      '....oAoossssssssooAo...',  // mão + stylus
+      '.....yYYYYYYYYYYYy.....',  // stylus atravessado
+      '.....oAoooooooooAo.....',  // cintura
+      // ── pernas ───────────────────────────────
+      '......OOOOOOOOOOo......',
+      '.......OO.......OO.....',
+      '.......OO.......OO.....',
+      '.......OO.......OO.....',
+      '.......OO.......OO.....',
+      '......kOOk.....kOOk....',
+      '.....kkkkkk...kkkkkk...',
     ]
   },
 
-  // ------------------------------------------------------------------
-  // PRODUCT OWNER — outfit dourado, segura quadro kanban
-  // ------------------------------------------------------------------
+  // ================================================================
+  // TECH LEAD
+  // Silhueta: cabelo POMPADOUR para cima + polo elegante
+  // com emblema. Laptop aberto com diagrama de arquitetura.
+  // ================================================================
   po: {
     palette: {
-      o: '#c9930a',  // outfit dourado
-      O: '#9c6f06',  // outfit sombra
-      h: '#3d2b1a',  // cabelo
-      w: '#8a5a2b',  // madeira do quadro
-      r: '#e05c5c',  // post-it vermelho
-      n: '#56ccf2',  // post-it azul
-      g: '#f1b30b',  // post-it amarelo
-      q: '#34c759',  // post-it verde
-      W: '#f8f8f8',  // fundo quadro
+      o: '#c9930a',  // polo dourado
+      O: '#9c6f06',  // dourado sombra
+      A: '#e8b535',  // dourado highlight
+      h: '#3d2b1a',  // cabelo marrom
+      H: '#6b4226',  // cabelo claro (pompadour)
+      Z: '#9e6630',  // cabelo sombra
+      L: '#dce3ea',  // laptop prata
+      l: '#b0bec9',  // laptop sombra
+      C: '#0d1117',  // tela preta
+      n: '#56ccf2',  // box azul (componente)
+      N: '#2d86b0',  // box azul sombra
+      q: '#34c759',  // box verde
+      Q: '#1f8a3d',  // box verde sombra
+      r: '#e05c5c',  // alerta vermelho
+      x: '#f0f4f8',  // seta/conexão branca
+      g: '#f1b30b',  // emblema polo
     },
     grid: [
-      '....khhhhhhk....',     // cabelo
-      '...khssssssshk..',     // rosto
-      '...khsesssseshk.',     // olhos
-      '...khssssssshk..',     // rosto baixo
-      '....khhhhhhk....',     // queixo
-      '.....oooooooo...',     // gola
-      '....oossssssoo..',     // ombros
-      '....ossssssso...',     // torso
-      '...owwwwwwwwoo..',    // quadro kanban moldura
-      '...owrrnnnggoo..',    // post-its linha 1
-      '...owrrqnnggoo..',    // post-its linha 2
-      '...owqqnrrggoo..',    // post-its linha 3
-      '...owwwwwwwwoo..',    // base do quadro
-      '....ooooooooo...',    // cintura
-      '....oOOOOOOoo...',
-      '.....OOO.OOO....',
-      '.....OOO.OOO....',
-      '.....OOO.OOO....',
-      '....kkkkkkkkk...',
+      // ── pompadour (inclinado para cima) ──────
+      '...kZhHHHHHHHHHHHHk...',  // pompadour topo
+      '..kZhhHHHHHHHHHHHhhk..',  // pompadour corpo
+      '..kZhhhHHHHHHHHhhhk...',  // transição
+      // ── cabeça ───────────────────────────────
+      '..khhhsssssssssshhk....',  // testa
+      '..khssEEEsssEEEssshk...',  // sobrancelhas marcadas
+      '..khsssieesssieessshk..',  // olhos com íris
+      '..khssssssssssssssshk..',  // mid face
+      '..khssssDssssDsssshk...',  // nariz
+      '..khssssWWWWWWssshk....',  // sorriso confiante
+      '...khhhhhhhhhhhhhk.....',  // queixo
+      // ── pescoço ──────────────────────────────
+      '.....sssssssss.......',
+      // ── polo com emblema + laptop ─────────────
+      '....oAoossssooAo.....',   // gola polo (V-neck)
+      '...oAooossssooooAo...',   // ombros
+      '..oAoooogooooooooAo..',   // emblema no peito
+      '..oAooooooooooooooAo.',   // torso
+      '..oAooLLLLLLLLLLoooAo',  // laptop borda
+      '..oAooLCCCCCCCCCLoooAo', // tela topo
+      '..oAooLCnnnxqqqCLoooAo', // box azul → box verde
+      '..oAooLCnxnxqxqCLoooAo', // interior dos boxes
+      '..oAooLCnnnxqqqCLoooAo', // box base
+      '..oAooLCCxxxxxCCLoooAo', // seta conectando
+      '..oAooLCCCrrrCCCLoooAo', // alerta vermelho
+      '..oAoolLLLLLLLLlloooAo', // teclado
+      '...oAoooooooooooAo.....',  // cintura
+      // ── pernas ───────────────────────────────
+      '....OOOOOOOOOOOo.....',
+      '.....OO.......OO.....',
+      '.....OO.......OO.....',
+      '.....OO.......OO.....',
+      '.....OO.......OO.....',
+      '....kOOk.....kOOk....',
+      '...kkkkkk...kkkkkk...',
     ]
   },
 
-  // ------------------------------------------------------------------
-  // INCIDENTE EM PRODUÇÃO — servidor vermelho glitchado com chamas
-  // ------------------------------------------------------------------
+  // ================================================================
+  // INCIDENTE EM PRODUÇÃO
+  // Servidor rack GRANDE com chamas detalhadas em 3 tons,
+  // olhos irados com brilho, tela ERROR 500, grade de ventilação,
+  // parafusos visíveis, base com pés
+  // ================================================================
   incident: {
     palette: {
       o: '#c0392b',  // servidor vermelho
-      O: '#8e2820',  // servidor sombra
+      O: '#8e2820',  // sombra
+      A: '#e05040',  // highlight
       F: '#ff6b35',  // chama laranja
       f: '#ffd93d',  // chama amarela
-      g: '#f1b30b',  // olhos (brilho amarelo)
-      Y: '#ffe066',  // íris amarela
+      Y: '#fff8d0',  // chama ponta clara
       C: '#0d1117',  // tela preta
-      q: '#34c759',  // texto verde (ERROR)
-      r: '#ff5a5a',  // detalhes vermelhos brilhantes
-      W: '#f0f0f0',  // luz branca
-      P: '#2d3748',  // painel lateral
-      M: '#8b95a1',  // metal
+      q: '#39ff6a',  // texto verde
+      r: '#ff5a5a',  // texto/barra vermelha
+      g: '#ffd166',  // olho amarelo brilhante
+      G: '#c9930a',  // olho âmbar
+      X: '#ff2200',  // olho vermelho (raiva)
+      P: '#2d3748',  // painel lateral escuro
+      m: '#718096',  // parafuso
+      M: '#4a5568',  // painel slot
+      w: '#f0f4f8',  // texto ERROR branco
+      L: '#1a2533',  // slot ventilação
+      Z: '#e8edf2',  // slot ventilação claro
     },
     grid: [
-      // chamas no topo
-      '......fFf.FfF.fFf......',
-      '.....fFFFF.FFFfFFF.....',
-      '....fFFfFFFFFFFfFF.....',
-      // corpo do servidor (caixa grande)
-      '...kkkkkkkkkkkkkkkkk...',
-      '...kooooooooooooooook...',
-      '...kooooooooooooooook...',
-      '...kooYYYooooYYYooook...',  // olhos
-      '...koYgYgYooYgYgYoook...',  // pupila
-      '...kooYYYooooYYYooook...',  // olhos baixo
-      '...kooooooooooooooook...',
-      '...kooCCCCCCCCCCCoook...',  // tela preta
-      '...kooCrrrrrrrrCCook...',   // barra ERROR
-      '...kooCCqCqCqCCCCook...',   // texto verde
-      '...kooCCCCCCCCCCCoook...',
-      '...kooooooooooooooook...',
-      '...kkkkkkkkkkkkkkkkk...',
-      // base/pés do servidor
-      '....PPPPPkkPPPPkPPPP...',
-      '....PPP..kk...kk..PPP..',
-      '....kkk..........kkk...',
+      // ── chamas em 3 tons ─────────────────────
+      '....YYYff..ffYYY.....',   // chamas topo
+      '...YfFff.fFff.fFfY...',  // chamas meio
+      '..YfFFFffFFFffFFFfY..',  // chamas largas
+      '.YfFFfYfYfFFFfYfYfFfY.', // chamas elaboradas
+      // ── topo do servidor ─────────────────────
+      '.kkkkkkkkkkkkkkkkkkk.',  // borda topo
+      '.koAoooooooooooooook.',  // rack topo com highlight
+      '.kmmmmmmmmmmmmmmmmk.',   // faixa parafusos
+      // ── olhos grandes e irados ───────────────
+      '.koAooooooooooooook.',   // rack
+      '.koAoggggXooXggggook.',  // olhos: íris amarela, pupila vermelha
+      '.koAogGgGXooXgGgGook.',  // detalhe olho
+      '.koAoggggXooXggggook.',  // olho base
+      '.koAooooooooooooook.',   // entre olhos e tela
+      // ── tela ERROR 500 ───────────────────────
+      '.koAooCCCCCCCCCCCoook.', // tela topo
+      '.koAooCCwwwwwwwwCCoook.',// ERROR em branco
+      '.koAooCCCCCCCCCCCoook.', // tela linha
+      '.koAooCqCqCqCqCCCCoook.',// código verde
+      '.koAooCrrrrrrrrrCCoook.',// barra vermelha
+      '.koAooCCCCCCCCCCCoook.', // tela base
+      // ── grade de ventilação ──────────────────
+      '.koAooLZLZLZLZLZLoook.', // grade slot
+      '.koAooLZLZLZLZLZLoook.', // grade slot
+      // ── base do rack ─────────────────────────
+      '.koAoooooooooooooook.',
+      '.kOkkkkkkkkkkkkkkkOk.',  // base rack
+      // ── pés ──────────────────────────────────
+      '..PPPPPPk.......kPPPPP.',
+      '..PPP....k.....k....PPP',
+      '..kkk...............kkk',
     ]
   }
 };
 
-// ===== RENDERIZADOR ===================================================
-
-function pixelSVG(key, { pixel = 10, idle = true, className = '' } = {}) {
+// ====================================================================
+//  Renderizador
+// ====================================================================
+function pixelSVG(key, { pixel = 9, idle = true, className = '' } = {}) {
   const art = ART[key];
   if (!art) return '';
   const palette = Object.assign({}, PALETTE_BASE, art.palette || {});
-  const grid = art.grid;
-  const width = Math.max(...grid.map(r => r.length));
-  const height = grid.length;
+  const grid    = art.grid;
+  const width   = Math.max(...grid.map(r => r.length));
+  const height  = grid.length;
 
   let rects = '';
   for (let y = 0; y < height; y++) {
