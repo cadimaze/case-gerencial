@@ -77,7 +77,7 @@ function screenIntro() {
       <p class="lead">
         Cinco especialistas. Cinco equipes. Um único objetivo: conter o
         <strong>Incidente em Produção</strong> antes que ele derrube tudo.<br/>
-        Cada decisão certa acumula <strong>Pontos de Heroísmo</strong>.
+        Cada decisão certa acumula <strong>Pontos de Trabalho em Equipe</strong>.
         Mas só uma postura vence — <strong>ir de turma</strong>.
       </p>
       <button class="btn" onclick="screenRoster()">Conhecer o Time ⚔️</button>
@@ -232,7 +232,7 @@ function answer(i) {
   fb.innerHTML = `
     <span class="emoji">${acertou ? '🛡️' : '💔'}</span>
     <span>
-      ${acertou ? `<span class="pts">+${CONFIG.pontosPorAcerto} Heroísmo!</span> ` : ''}
+      ${acertou ? `<span class="pts">+${CONFIG.pontosPorAcerto} Trabalho em Equipe!</span> ` : ''}
       ${cenario.opcoes[i].feedback}
       ${!acertou
         ? `<br/><em style="color:var(--gold-soft)">Resposta alinhada: ${LETRAS[correctIndex]}) ${cenario.opcoes[correctIndex].texto}</em>`
@@ -321,7 +321,7 @@ function screenPreBattle() {
         </div>
         <div class="pbt-numbers">
           <span style="color:${statusCor}; font-family:var(--pixel); font-size:clamp(18px,3vw,30px)">${statusIcon} ${state.pontos}</span>
-          <span style="color:var(--ink-soft); font-size:15px">/ ${CONFIG.pontuacaoMaxima} Pontos de Heroísmo</span>
+          <span style="color:var(--ink-soft); font-size:15px">/ ${CONFIG.pontuacaoMaxima} Pontos de Trabalho em Equipe</span>
         </div>
         <p class="pbt-msg">${statusMsg}</p>
       </div>
@@ -364,40 +364,77 @@ function screenFinale() {
 function runBattle(venceu) {
   const incident = document.getElementById('incident');
   const stage    = document.querySelector('.battle-stage');
+  const party    = document.querySelector('.battle-party');
 
-  let shots = 0;
-  const totalShots = Math.max(3, Math.round(state.acertos / 2));
+  // Fase 1: carga de energia (todos os personagens pulsam)
+  if (party) party.classList.add('battle-charging');
 
-  const fire = setInterval(() => {
-    shootBeam(stage);
-    if (incident) {
-      incident.classList.remove('shake');
-      void incident.offsetWidth;
-      incident.classList.add('shake');
-    }
-    shots++;
-    if (shots >= totalShots) {
-      clearInterval(fire);
-      setTimeout(() => revealResult(venceu, incident), 700);
-    }
-  }, 520);
+  setTimeout(() => {
+    if (party) party.classList.remove('battle-charging');
+
+    // Fase 2: ataques sequenciais, um por personagem
+    const totalShots = Math.max(PERSONAGENS.length, state.acertos + 2);
+    let shot = 0;
+
+    const fireNext = () => {
+      if (shot >= totalShots) {
+        setTimeout(() => revealResult(venceu, incident), 800);
+        return;
+      }
+      const pIdx = shot % PERSONAGENS.length;
+      const cor  = PERSONAGENS[pIdx].cor;
+
+      // destaca o personagem que está atacando
+      const charSvgs = document.querySelectorAll('.battle-party .pixel-svg');
+      charSvgs.forEach((el, i) => el.style.filter = i === pIdx ? `drop-shadow(0 0 8px ${cor})` : 'none');
+
+      shootBeam(stage, cor);
+
+      if (incident) {
+        incident.classList.remove('shake');
+        void incident.offsetWidth;
+        incident.classList.add('shake');
+      }
+      // flash de impacto no stage
+      if (stage) {
+        const flash = document.createElement('div');
+        flash.style.cssText = `position:absolute;inset:0;background:${cor};opacity:0;border-radius:inherit;pointer-events:none;transition:opacity .08s`;
+        stage.appendChild(flash);
+        requestAnimationFrame(() => { flash.style.opacity = '0.22'; });
+        setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 120); }, 80);
+      }
+
+      shot++;
+      setTimeout(fireNext, shot < PERSONAGENS.length ? 420 : 300);
+    };
+
+    setTimeout(fireNext, 300);
+  }, 900);
 }
 
-function shootBeam(stage) {
+function shootBeam(stage, cor) {
   if (!stage) return;
+  cor = cor || '#f1b30b';
   const beam = document.createElement('div');
   beam.className = 'beam';
-  const r = stage.getBoundingClientRect();
-  const startY = r.height * (0.45 + Math.random() * 0.25);
-  beam.style.left = '24%';
-  beam.style.top  = startY + 'px';
-  beam.style.width = '0px';
+  beam.style.setProperty('--beam-color', cor);
+  const r       = stage.getBoundingClientRect();
+  const startY  = r.height * (0.42 + Math.random() * 0.22);
+  beam.style.left   = '18%';
+  beam.style.top    = startY + 'px';
+  beam.style.width  = '0px';
+  beam.style.background = `linear-gradient(90deg, transparent, ${cor}cc, #fff, ${cor}cc)`;
+  beam.style.boxShadow  = `0 0 8px 2px ${cor}88`;
   stage.appendChild(beam);
   requestAnimationFrame(() => {
-    beam.style.transition = 'width .35s ease';
-    beam.style.width = '52%';
+    beam.style.transition = 'width .3s cubic-bezier(.2,.8,.4,1)';
+    beam.style.width = '58%';
   });
-  setTimeout(() => beam.remove(), 600);
+  setTimeout(() => {
+    beam.style.transition = 'opacity .15s';
+    beam.style.opacity = '0';
+    setTimeout(() => beam.remove(), 200);
+  }, 350);
 }
 
 function revealResult(venceu, incident) {
@@ -408,7 +445,7 @@ function revealResult(venceu, incident) {
     launchConfetti();
     box.innerHTML = `
       <div class="result win">INCIDENTE RESOLVIDO!</div>
-      <div class="score-line">A turma reuniu <strong>${state.pontos}</strong> de ${CONFIG.pontuacaoMaxima} Pontos de Heroísmo</div>
+      <div class="score-line">A turma reuniu <strong>${state.pontos}</strong> de ${CONFIG.pontuacaoMaxima} Pontos de Trabalho em Equipe</div>
       <p class="message">
         O Incidente em Produção foi contido! Não pela força de um só —
         mas porque cada especialista comunicou, pediu ajuda e agiu junto.
@@ -421,7 +458,7 @@ function revealResult(venceu, incident) {
     const faltou = CONFIG.limiteParaVencer - state.pontos;
     box.innerHTML = `
       <div class="result lose">INCIDENTE PERSISTE...</div>
-      <div class="score-line">A turma reuniu <strong>${state.pontos}</strong> de ${CONFIG.pontuacaoMaxima} Pontos de Heroísmo</div>
+      <div class="score-line">A turma reuniu <strong>${state.pontos}</strong> de ${CONFIG.pontuacaoMaxima} Pontos de Trabalho em Equipe</div>
       <div class="score-line">Faltaram <strong>${faltou}</strong> pontos para atingir a meta de ${CONFIG.limiteParaVencer}</div>
       <p class="message">
         O incidente resistiu desta vez. A lição fica: cada decisão de

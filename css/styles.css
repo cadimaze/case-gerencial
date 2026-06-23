@@ -367,20 +367,29 @@ h2.pixel-title { font-size: clamp(14px, 2.4vw, 22px); color: var(--gold-soft); }
   overflow: hidden;
 }
 .battle-party { display: flex; align-items: flex-end; gap: clamp(2px,1vw,12px); }
-.battle-party .pixel-svg { filter: drop-shadow(0 8px 8px rgba(0,0,0,.5)); }
+.battle-party .pixel-svg { filter: drop-shadow(0 8px 8px rgba(0,0,0,.5)); transition: filter .2s; }
 .battle-dragon .pixel-svg { filter: drop-shadow(0 12px 14px rgba(0,0,0,.55)); }
 .battle-incident.shake { animation: shake .4s ease; }
-@keyframes shake { 0%,100%{transform:none} 25%{transform:translateX(-12px) rotate(-2deg)} 75%{transform:translateX(12px) rotate(2deg)} }
-.battle-incident.flee { animation: flee 1.6s ease-in forwards; }
-@keyframes flee { to { transform: translate(60vw, -40vh) scale(.2) rotate(20deg); opacity: 0; } }
+@keyframes shake { 0%,100%{transform:none} 20%{transform:translateX(-14px) rotate(-3deg)} 50%{transform:translateX(10px) scale(1.04)} 80%{transform:translateX(-8px) rotate(2deg)} }
+.battle-incident.flee { animation: flee 1.8s ease-in forwards; }
+@keyframes flee { 0%{transform:none} 20%{transform:scale(1.1) rotate(-5deg)} 100%{transform:translate(70vw,-50vh) scale(.1) rotate(30deg); opacity:0;} }
 .battle-incident.victory-incident { animation: incident-pulse 1s ease infinite; }
 @keyframes incident-pulse { 50% { transform: scale(1.06); filter: brightness(1.2); } }
 
+/* Carga de energia antes dos ataques */
+.battle-party.battle-charging .pixel-svg {
+  animation: charge-pulse .45s ease-in-out infinite alternate;
+}
+@keyframes charge-pulse {
+  from { filter: drop-shadow(0 0 4px #fff) brightness(1); transform: scale(1); }
+  to   { filter: drop-shadow(0 0 16px var(--gold)) brightness(1.35); transform: scale(1.06); }
+}
+
 .beam {
   position: absolute;
-  height: 6px;
-  background: linear-gradient(90deg, transparent, var(--gold-soft), #fff);
-  box-shadow: 0 0 14px var(--gold-soft);
+  height: 7px;
+  background: linear-gradient(90deg, transparent, var(--beam-color, var(--gold-soft)), #fff, var(--beam-color, var(--gold-soft)));
+  box-shadow: 0 0 14px var(--beam-color, var(--gold-soft));
   border-radius: 4px;
   z-index: 5;
 }
