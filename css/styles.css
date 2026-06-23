@@ -145,8 +145,8 @@ h2.pixel-title { font-size: clamp(14px, 2.4vw, 22px); color: var(--gold-soft); }
 }
 .btn.secondary:active { box-shadow: 0 2px 0 #2c1c4d; }
 
-/* ---------- Pixel art ---------- */
-.pixel-svg { display: block; image-rendering: pixelated; }
+/* ---------- Ilustração vetorial ---------- */
+.pixel-svg { display: block; }
 .pix-idle { animation: idle-bob 2.4s ease-in-out infinite; transform-origin: center bottom; }
 @keyframes idle-bob {
   0%,100% { transform: translateY(0) }
