@@ -49,12 +49,12 @@ const PERSONAGENS = [
   },
   {
     id: 'po',
-    nome: 'Product Owner',
+    nome: 'Tech Lead',
     equipe: 'Equipe 5',
     cor: '#f1b30b',
     corClara: '#ffd966',
-    epiteto: 'O Maestro da Turma',
-    descricao: 'Conecta visão de negócio e execução técnica. O backlog mais saudável é o mais alinhado.'
+    epiteto: 'A Âncora da Turma',
+    descricao: 'Equilibra decisões técnicas e pessoas. Sabe que o melhor código nasce de um time bem alinhado.'
   }
 ];
 
@@ -186,30 +186,30 @@ const CENARIOS = {
 
   po: [
     {
-      titulo: 'Ação 1 — Times em conflito',
-      situacao: 'Dois times divergem sobre qual funcionalidade priorizar na próxima sprint e o debate está esquentando. O PO precisa agir. Como?',
+      titulo: 'Ação 1 — A decisão de arquitetura',
+      situacao: 'O time está dividido sobre qual abordagem técnica usar em uma feature crítica. O debate se arrasta e o prazo aperta. O Tech Lead precisa agir. Como?',
       opcoes: [
-        { texto: 'Impõe a própria prioridade unilateralmente para encerrar o debate logo.', correta: false, feedback: 'Decisão imposta sem escuta gera resistência e desmotivação.' },
-        { texto: 'Deixa cada time decidir por conta própria para evitar conflito.', correta: false, feedback: 'Ausência de alinhamento resulta em times remando em direções opostas.' },
-        { texto: 'Facilita uma sessão de refinamento com os dois times, trazendo critérios de valor e impacto para decidir juntos.', correta: true, feedback: 'O PO que facilita decisão coletiva constrói times mais autônomos e alinhados.' }
+        { texto: 'Impõe a solução que considera mais adequada — afinal, tem mais experiência.', correta: false, feedback: 'Impor decisão sem escuta desperdiça o conhecimento do time e cria ressentimento.' },
+        { texto: 'Deixa o time decidir sozinho para não parecer centralizador.', correta: false, feedback: 'Omitir liderança técnica quando o time está travado prolonga o impasse.' },
+        { texto: 'Organiza uma conversa rápida, escuta os argumentos, contribui com sua visão e facilita a decisão coletiva com critérios claros.', correta: true, feedback: 'Tech Lead que facilita decisão técnica com o time constrói autonomia e coesão.' }
       ]
     },
     {
-      titulo: 'Ação 2 — Pressão por prazo',
-      situacao: 'Uma entrega importante está atrasada e a liderança cobra prazo com urgência. O que o PO faz?',
+      titulo: 'Ação 2 — O dev júnior travado',
+      situacao: 'Um desenvolvedor júnior está há dois dias preso em um problema e não pediu ajuda para não parecer incompetente. O Tech Lead percebe. O que faz?',
       opcoes: [
-        { texto: 'Promete uma data para a liderança sem consultar o time técnico.', correta: false, feedback: 'Promessa sem respaldo do time cria expectativas falsas e pressão injusta.' },
-        { texto: 'Culpa o time técnico pelo atraso diante da liderança.', correta: false, feedback: 'Culpar o time quebra a confiança e desintegra a colaboração.' },
-        { texto: 'Conversa com o time, entende os impedimentos reais e comunica à liderança com transparência e proposta concreta.', correta: true, feedback: 'Transparência com proposta é a linguagem que une negócio e técnico.' }
+        { texto: 'Resolve o problema pelo júnior sem envolvê-lo, para não perder tempo.', correta: false, feedback: 'Resolver por ele priva o júnior do aprendizado e cria dependência.' },
+        { texto: 'Espera o júnior pedir ajuda — iniciativa própria faz parte do crescimento.', correta: false, feedback: 'Deixar alguém travado por orgulho prejudica o time e o próprio colaborador.' },
+        { texto: 'Abre espaço para o júnior compartilhar o problema e os resolve juntos, reforçando que pedir ajuda é parte do trabalho.', correta: true, feedback: 'Criar cultura de ajuda mútua começa pelo exemplo do Tech Lead.' }
       ]
     },
     {
-      titulo: 'Ação 3 — Demanda urgente no meio da sprint',
-      situacao: 'No terceiro dia da sprint, o negócio traz uma demanda urgente que muda tudo. O PO precisa decidir. Como age?',
+      titulo: 'Ação 3 — Dívida técnica vs. nova feature',
+      situacao: 'O negócio pressiona por uma nova feature, mas o Tech Lead sabe que a dívida técnica acumulada vai tornar a entrega instável. Como age?',
       opcoes: [
-        { texto: 'Interrompe a sprint imediatamente e muda o backlog sem consultar o time.', correta: false, feedback: 'Mudança unilateral destrói o ritmo e a confiança do time.' },
-        { texto: 'Ignora a demanda do negócio completamente para proteger o time.', correta: false, feedback: 'Ignorar o negócio não é proteger o time — é criar conflito futuro.' },
-        { texto: 'Avalia o impacto com o time, negocia o que pode entrar ou sair e comunica a decisão a todas as partes.', correta: true, feedback: 'O PO que decide com o time e comunica com o negócio é o elo que mantém tudo junto.' }
+        { texto: 'Entrega a feature sem falar da dívida — problema técnico é problema técnico.', correta: false, feedback: 'Omitir risco técnico ao negócio cria surpresas ruins e erosão de confiança.' },
+        { texto: 'Recusa a demanda unilateralmente para proteger a qualidade do código.', correta: false, feedback: 'Bloquear sem negociar isola a área técnica e gera atrito desnecessário.' },
+        { texto: 'Apresenta o risco com clareza ao time e ao negócio, propõe um plano que equilibra a entrega e a saúde técnica, e decide junto.', correta: true, feedback: 'Tech Lead que traduz risco técnico em linguagem de negócio une os dois mundos.' }
       ]
     }
   ]
