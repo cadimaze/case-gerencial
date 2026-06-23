@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Gente Vai de Turma — A Lenda do Dragão</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Logo sutil no canto -->
+  <img src="assets/itau-logo.svg" class="brand" alt="" />
+
+  <!-- Botão tela cheia -->
+  <button id="btn-fullscreen" class="fullscreen-btn" title="Tela cheia">⛶</button>
+
+  <!-- Campo de estrelas / partículas de fundo -->
+  <div class="stars" id="stars"></div>
+
+  <main id="app" class="app">
+    <!-- As telas são injetadas via JavaScript -->
+  </main>
+
+  <!-- HUD de heroísmo (aparece durante as rodadas) -->
+  <div id="hud" class="hud hidden">
+    <div class="hud-label">Pontos de Heroísmo da Turma</div>
+    <div class="hud-bar-wrap">
+      <div class="hud-bar" id="hud-bar"></div>
+      <div class="hud-threshold" id="hud-threshold" title="Necessário para vencer o Dragão"></div>
+    </div>
+    <div class="hud-value"><span id="hud-value">0</span> / 300</div>
+  </div>
+
+  <audio id="sfx-correct" preload="auto"></audio>
+
+  <script src="js/data.js"></script>
+  <script src="js/characters.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

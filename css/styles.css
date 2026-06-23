@@ -1,0 +1,419 @@
+/* =====================================================================
+   A GENTE VAI DE TURMA — A Lenda do Dragão
+   Estilo: pixel art / fantasia amigável
+   ===================================================================== */
+
+:root {
+  --bg-0: #1a1033;
+  --bg-1: #2a1a4f;
+  --bg-2: #3a2168;
+  --ink: #f7f3ff;
+  --ink-soft: #c9bce8;
+  --gold: #f1b30b;
+  --gold-soft: #ffd966;
+  --green: #34c759;
+  --red: #ff5a5a;
+  --itau: #ec7000;
+  --panel: rgba(20, 12, 42, 0.78);
+  --panel-border: rgba(241, 179, 11, 0.35);
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  --pixel: 'Press Start 2P', monospace;
+  --body: 'Baloo 2', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--body);
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 600px at 50% -10%, var(--bg-2), transparent 60%),
+    radial-gradient(900px 500px at 90% 110%, #4a1f6b, transparent 60%),
+    linear-gradient(160deg, var(--bg-0), var(--bg-1));
+  background-attachment: fixed;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ---------- Marca / Fullscreen ---------- */
+.brand {
+  position: fixed;
+  bottom: 14px;
+  right: 16px;
+  width: 58px;
+  height: auto;
+  opacity: 0.55;
+  z-index: 50;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+}
+
+.fullscreen-btn {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 2px solid var(--panel-border);
+  background: var(--panel);
+  color: var(--gold-soft);
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform .15s ease, background .15s ease;
+}
+.fullscreen-btn:hover { transform: scale(1.08); background: #2a1a4f; }
+
+/* ---------- Estrelas de fundo ---------- */
+.stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.star {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: #fff;
+  border-radius: 1px;
+  opacity: 0.6;
+  animation: twinkle var(--dur, 3s) ease-in-out infinite;
+}
+@keyframes twinkle { 0%,100%{opacity:.15; transform:scale(.6)} 50%{opacity:.9; transform:scale(1)} }
+
+/* ---------- Layout app ---------- */
+.app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px 80px;
+}
+
+.screen {
+  width: 100%;
+  max-width: 1080px;
+  animation: screen-in .55s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes screen-in {
+  from { opacity: 0; transform: translateY(24px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.screen.out { animation: screen-out .35s ease forwards; }
+@keyframes screen-out { to { opacity: 0; transform: translateY(-20px) scale(.98); } }
+
+/* ---------- Tipografia ---------- */
+.pixel-title {
+  font-family: var(--pixel);
+  line-height: 1.5;
+  text-shadow: 0 3px 0 rgba(0,0,0,.45), 0 0 18px rgba(241,179,11,.25);
+}
+h1.pixel-title { font-size: clamp(20px, 4.4vw, 44px); color: var(--gold-soft); }
+h2.pixel-title { font-size: clamp(14px, 2.4vw, 22px); color: var(--gold-soft); }
+
+.lead { font-size: clamp(16px, 2vw, 20px); color: var(--ink-soft); line-height: 1.5; }
+
+/* ---------- Painel genérico ---------- */
+.panel {
+  background: var(--panel);
+  border: 2px solid var(--panel-border);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+}
+
+/* ---------- Botões ---------- */
+.btn {
+  font-family: var(--body);
+  font-weight: 800;
+  font-size: clamp(15px, 1.8vw, 19px);
+  border: none;
+  border-radius: 16px;
+  padding: 16px 30px;
+  cursor: pointer;
+  color: #2a1500;
+  background: linear-gradient(180deg, var(--gold-soft), var(--gold));
+  box-shadow: 0 6px 0 #a87a05, 0 12px 22px rgba(0,0,0,.35);
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+.btn:hover { filter: brightness(1.05); transform: translateY(-2px); }
+.btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #a87a05, 0 6px 12px rgba(0,0,0,.35); }
+.btn.secondary {
+  background: linear-gradient(180deg, #5a3f8f, #432e6e);
+  color: var(--ink);
+  box-shadow: 0 6px 0 #2c1c4d, 0 12px 22px rgba(0,0,0,.35);
+}
+.btn.secondary:active { box-shadow: 0 2px 0 #2c1c4d; }
+
+/* ---------- Pixel art ---------- */
+.pixel-svg { display: block; image-rendering: pixelated; }
+.pix-idle { animation: idle-bob 2.4s ease-in-out infinite; transform-origin: center bottom; }
+@keyframes idle-bob {
+  0%,100% { transform: translateY(0) }
+  50% { transform: translateY(-6px) }
+}
+
+/* ===================================================================
+   TELA: INTRO
+   =================================================================== */
+.intro { text-align: center; }
+.intro .kicker {
+  font-family: var(--pixel);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--itau);
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+.intro h1 { margin-bottom: 18px; }
+.intro .heroes-row {
+  display: flex; justify-content: center; align-items: flex-end;
+  gap: clamp(6px, 2vw, 28px);
+  margin: 30px 0 34px;
+  flex-wrap: wrap;
+}
+.intro .heroes-row .pixel-svg { filter: drop-shadow(0 8px 10px rgba(0,0,0,.45)); }
+.intro .heroes-row > div:nth-child(2) { animation-delay: .2s; }
+.intro .heroes-row > div:nth-child(3) { animation-delay: .4s; }
+.intro .heroes-row > div:nth-child(4) { animation-delay: .6s; }
+.intro .heroes-row > div:nth-child(5) { animation-delay: .8s; }
+.intro .lead { max-width: 720px; margin: 0 auto 30px; }
+
+/* ===================================================================
+   TELA: APRESENTAÇÃO DOS PERSONAGENS
+   =================================================================== */
+.roster h1 { text-align: center; margin-bottom: 8px; }
+.roster .lead { text-align: center; margin-bottom: 30px; }
+.roster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+  margin-bottom: 32px;
+}
+.hero-card {
+  padding: 22px 16px 18px;
+  text-align: center;
+  border-top: 5px solid var(--char, var(--gold));
+  animation: card-pop .5s cubic-bezier(.2,.9,.3,1.2) both;
+}
+.hero-card .pixel-svg { margin: 0 auto 10px; filter: drop-shadow(0 6px 8px rgba(0,0,0,.4)); }
+.hero-card .team { font-family: var(--pixel); font-size: 9px; color: var(--ink-soft); }
+.hero-card .name { font-weight: 800; font-size: 19px; color: var(--char); margin: 6px 0 2px; }
+.hero-card .epithet { font-size: 14px; color: var(--gold-soft); font-weight: 700; margin-bottom: 8px; }
+.hero-card .desc { font-size: 13.5px; color: var(--ink-soft); line-height: 1.4; }
+@keyframes card-pop { from{opacity:0; transform:translateY(20px) scale(.9)} to{opacity:1; transform:none} }
+.roster .actions { text-align: center; }
+
+/* ===================================================================
+   TELA: AÇÃO (pergunta)
+   =================================================================== */
+.action-screen { display: grid; grid-template-columns: 280px 1fr; gap: 26px; align-items: start; }
+
+.action-hero {
+  padding: 22px;
+  text-align: center;
+  border-top: 6px solid var(--char);
+  position: sticky;
+  top: 20px;
+}
+.action-hero .round-tag {
+  font-family: var(--pixel); font-size: 9px; color: var(--ink-soft); margin-bottom: 14px;
+}
+.action-hero .pixel-svg { margin: 0 auto 12px; filter: drop-shadow(0 8px 10px rgba(0,0,0,.45)); }
+.action-hero .name { font-weight: 800; font-size: 22px; color: var(--char); }
+.action-hero .team { font-family: var(--pixel); font-size: 9px; color: var(--ink-soft); margin-top: 4px; }
+.action-hero .timer {
+  margin-top: 18px;
+  font-family: var(--pixel);
+  font-size: 26px;
+  color: var(--gold-soft);
+}
+.action-hero .timer.low { color: var(--red); animation: pulse .5s ease-in-out infinite; }
+@keyframes pulse { 50% { transform: scale(1.12); } }
+.action-hero .timer-label { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
+
+.action-main { display: flex; flex-direction: column; gap: 18px; }
+.action-card { padding: 26px 28px; }
+.action-card .action-title {
+  font-family: var(--pixel); font-size: 12px; color: var(--char); margin-bottom: 16px;
+}
+.action-card .situacao { font-size: clamp(17px, 2vw, 21px); line-height: 1.5; color: var(--ink); }
+
+.options { display: flex; flex-direction: column; gap: 14px; }
+.option {
+  text-align: left;
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 2px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  color: var(--ink);
+  font-family: var(--body); font-size: 17px; font-weight: 600;
+  cursor: pointer;
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+  animation: opt-in .4s ease both;
+}
+.option:nth-child(1){animation-delay:.05s} .option:nth-child(2){animation-delay:.13s} .option:nth-child(3){animation-delay:.21s}
+@keyframes opt-in { from{opacity:0; transform:translateX(-16px)} to{opacity:1; transform:none} }
+.option:hover:not(.locked) { transform: translateX(6px); border-color: var(--gold); background: rgba(241,179,11,.1); }
+.option .letter {
+  flex: 0 0 auto;
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border-radius: 10px;
+  background: rgba(255,255,255,.1);
+  font-family: var(--pixel); font-size: 13px; color: var(--gold-soft);
+}
+.options.locked .option { cursor: default; }
+.option.correct { border-color: var(--green); background: rgba(52,199,89,.18); }
+.option.correct .letter { background: var(--green); color: #04210f; }
+.option.wrong { border-color: var(--red); background: rgba(255,90,90,.16); opacity: .85; }
+.option.wrong .letter { background: var(--red); color: #2a0000; }
+.option.dim { opacity: .4; }
+
+.feedback {
+  padding: 16px 20px;
+  border-radius: 14px;
+  font-size: 16px; line-height: 1.45;
+  display: none;
+  animation: opt-in .4s ease both;
+}
+.feedback.show { display: flex; gap: 12px; align-items: center; }
+.feedback.good { background: rgba(52,199,89,.15); border: 2px solid var(--green); }
+.feedback.bad { background: rgba(255,90,90,.12); border: 2px solid var(--red); }
+.feedback .emoji { font-size: 28px; }
+.feedback .pts { font-weight: 800; color: var(--gold-soft); }
+
+.action-footer { display: flex; justify-content: flex-end; }
+
+/* +pontos flutuante */
+.float-pts {
+  position: fixed;
+  font-family: var(--pixel);
+  font-size: 22px;
+  color: var(--green);
+  text-shadow: 0 2px 0 rgba(0,0,0,.5);
+  pointer-events: none;
+  z-index: 80;
+  animation: float-up 1.3s ease-out forwards;
+}
+@keyframes float-up { 0%{opacity:0; transform:translateY(0) scale(.7)} 20%{opacity:1} 100%{opacity:0; transform:translateY(-90px) scale(1.2)} }
+
+/* ===================================================================
+   HUD
+   =================================================================== */
+.hud {
+  position: fixed;
+  top: 14px; left: 50%; transform: translateX(-50%);
+  z-index: 40;
+  width: min(520px, 86vw);
+  background: var(--panel);
+  border: 2px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 12px 18px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.hud.hidden { display: none; }
+.hud-label { font-family: var(--pixel); font-size: 9px; color: var(--ink-soft); margin-bottom: 8px; }
+.hud-bar-wrap {
+  position: relative;
+  height: 18px;
+  background: rgba(0,0,0,.35);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.1);
+}
+.hud-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-soft), var(--green));
+  border-radius: 10px;
+  transition: width .8s cubic-bezier(.2,.8,.2,1);
+}
+.hud-threshold {
+  position: absolute; top: -3px; bottom: -3px;
+  width: 3px; background: var(--red);
+  box-shadow: 0 0 8px var(--red);
+}
+.hud-value { font-family: var(--pixel); font-size: 11px; color: var(--gold-soft); margin-top: 8px; }
+
+/* ===================================================================
+   TELA: TRANSIÇÃO DE RODADA
+   =================================================================== */
+.round-intro { text-align: center; }
+.round-intro .big {
+  font-family: var(--pixel);
+  font-size: clamp(28px, 7vw, 64px);
+  color: var(--gold-soft);
+  text-shadow: 0 4px 0 rgba(0,0,0,.5);
+  animation: zoom-in .6s cubic-bezier(.2,.9,.3,1.3) both;
+}
+.round-intro .sub { font-size: clamp(18px, 2.4vw, 24px); color: var(--ink-soft); margin-top: 14px; }
+@keyframes zoom-in { from{opacity:0; transform:scale(.5)} to{opacity:1; transform:scale(1)} }
+
+/* ===================================================================
+   TELA: BATALHA FINAL / DRAGÃO
+   =================================================================== */
+.finale { text-align: center; }
+.battle-stage {
+  position: relative;
+  min-height: 320px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 20px clamp(10px, 4vw, 60px);
+  margin: 20px 0;
+  overflow: hidden;
+}
+.battle-party { display: flex; align-items: flex-end; gap: clamp(2px,1vw,12px); }
+.battle-party .pixel-svg { filter: drop-shadow(0 8px 8px rgba(0,0,0,.5)); }
+.battle-dragon .pixel-svg { filter: drop-shadow(0 12px 14px rgba(0,0,0,.55)); }
+.battle-dragon.shake { animation: shake .4s ease; }
+@keyframes shake { 0%,100%{transform:none} 25%{transform:translateX(-12px) rotate(-2deg)} 75%{transform:translateX(12px) rotate(2deg)} }
+.battle-dragon.flee { animation: flee 1.6s ease-in forwards; }
+@keyframes flee { to { transform: translate(60vw, -40vh) scale(.2) rotate(20deg); opacity: 0; } }
+.battle-dragon.victory-dragon { animation: dragon-roar 1s ease infinite; }
+@keyframes dragon-roar { 50% { transform: scale(1.04); } }
+
+.beam {
+  position: absolute;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, var(--gold-soft), #fff);
+  box-shadow: 0 0 14px var(--gold-soft);
+  border-radius: 4px;
+  z-index: 5;
+}
+
+.finale .result {
+  font-family: var(--pixel);
+  font-size: clamp(22px, 5vw, 48px);
+  margin: 16px 0;
+  animation: zoom-in .6s cubic-bezier(.2,.9,.3,1.3) both;
+}
+.finale .result.win { color: var(--green); text-shadow: 0 0 24px rgba(52,199,89,.5); }
+.finale .result.lose { color: var(--red); }
+.finale .score-line { font-size: clamp(18px, 2.5vw, 24px); color: var(--ink-soft); margin-bottom: 8px; }
+.finale .score-line strong { color: var(--gold-soft); }
+.finale .message { max-width: 720px; margin: 14px auto 26px; font-size: 18px; line-height: 1.5; color: var(--ink); }
+
+/* confetes */
+.confetti {
+  position: fixed; top: -10px; width: 10px; height: 14px;
+  z-index: 70; pointer-events: none;
+  animation: fall var(--d,3s) linear forwards;
+}
+@keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: .9; } }
+
+/* ===================================================================
+   RESPONSIVO
+   =================================================================== */
+@media (max-width: 760px) {
+  .action-screen { grid-template-columns: 1fr; }
+  .action-hero { position: static; display: flex; align-items: center; gap: 16px; text-align: left; flex-wrap: wrap; }
+  .action-hero .pixel-svg { margin: 0; }
+  .action-hero .timer { margin-top: 0; margin-left: auto; }
+  .battle-stage { flex-direction: column; align-items: center; gap: 24px; }
+}
+
+.hidden { display: none !important; }
