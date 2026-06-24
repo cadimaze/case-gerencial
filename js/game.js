@@ -74,6 +74,54 @@ function makeStars(n = 70) {
 }
 
 // ====================================================================
+//  KAIJU — helpers de imagem e efeitos sobre a imagem estática
+// ====================================================================
+
+const KAIJU_FMTS = [
+  'assets/kaiju-scene.gif',
+  'assets/kaiju-scene.png',
+  'assets/kaiju-scene.jpg',
+  'assets/kaiju-scene.jpeg'
+];
+
+function kaijuNextFmt(img) {
+  const next = (parseInt(img.dataset.fmt) || 0) + 1;
+  if (next < KAIJU_FMTS.length) {
+    img.dataset.fmt = next;
+    img.src = KAIJU_FMTS[next];
+  } else {
+    img.style.display = 'none';
+    const css = document.getElementById('kaiju-css-scene');
+    if (css) css.style.display = 'flex';
+  }
+}
+
+function kaijuImgLoaded() {
+  const overlay = document.getElementById('kaiju-overlay');
+  if (overlay) overlay.style.display = 'block';
+  generateEmbers();
+}
+
+function generateEmbers(n = 22) {
+  const container = document.getElementById('kaiju-embers');
+  if (!container) return;
+  const colors = ['#FFD93D', '#FF6B35', '#FFF3A0', '#ffd166', '#ff9a3c', '#ff5a5a'];
+  let html = '';
+  for (let i = 0; i < n; i++) {
+    const x     = (8 + Math.random() * 84).toFixed(1);
+    const y     = (35 + Math.random() * 55).toFixed(1);
+    const dur   = (2.2 + Math.random() * 3.5).toFixed(1);
+    const delay = (Math.random() * 5).toFixed(1);
+    const drift  = ((Math.random() * 50) - 25).toFixed(0);
+    const drift2 = ((Math.random() * 36) - 18).toFixed(0);
+    const size  = (2 + Math.random() * 3.5).toFixed(1);
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    html += `<div class="ember" style="left:${x}%;top:${y}%;width:${size}px;height:${size}px;background:${color};color:${color};--dur:${dur}s;--delay:${delay}s;--drift:${drift}px;--drift2:${drift2}px"></div>`;
+  }
+  container.innerHTML = html;
+}
+
+// ====================================================================
 //  TELA 0 — KAIJU INTRO (o incidente chega como um monstro)
 // ====================================================================
 function screenKaiju() {
@@ -83,16 +131,26 @@ function screenKaiju() {
     `<div class="kaiju-hero-wrap" style="--char:${p.cor}">${pixelSVG(p.id, { pixel: 5, idle: true })}</div>`
   ).join('');
 
-  // Se um GIF externo for fornecido, ele aparece; senão usa a cena CSS
   setScreen(`
     <section class="screen kaiju-intro">
 
-      <!-- CENA ANIMADA -->
+      <!-- CENA VISUAL -->
       <div class="kaiju-scene">
-        <!-- Tenta carregar GIF externo; se falhar, mostra a cena CSS -->
-        <img class="kaiju-gif" src="assets/kaiju-scene.gif"
-             onerror="this.style.display='none'; document.getElementById('kaiju-css-scene').style.display='flex';"
+
+        <!-- Imagem fornecida externamente (gif / png / jpg) com efeitos sobre ela -->
+        <img class="kaiju-img" id="kaiju-img"
+             src="${KAIJU_FMTS[0]}"
+             data-fmt="0"
+             onload="kaijuImgLoaded()"
+             onerror="kaijuNextFmt(this)"
              alt="Incidente em Produção como Kaiju" />
+
+        <!-- Camadas de efeito animado sobre a imagem (visíveis só quando ela carrega) -->
+        <div class="kaiju-overlay" id="kaiju-overlay">
+          <div class="kaiju-fire-glow"></div>
+          <div class="kaiju-vignette"></div>
+          <div class="kaiju-embers" id="kaiju-embers"></div>
+        </div>
 
         <div class="kaiju-css-scene" id="kaiju-css-scene">
           <!-- Chamas de fundo -->
