@@ -13,7 +13,8 @@ const state = {
   vidaMaxima:    CONFIG.vidaInicialIncidente,
   questionIndex: 0,
   questions:     [],
-  timer:         null
+  timer:         null,
+  danosPorChar:  {}   // { charId: netDamage }
 };
 
 const LETRAS = ['A', 'B', 'C'];
@@ -48,7 +49,6 @@ function updateHUD() {
   hudBar.style.width = pct + '%';
   hudVal.textContent = Math.max(0, state.vidaIncidente);
 
-  // cor varia: cheio = vermelho, quase vazio = amarelo
   if (pct > 60)      hudBar.style.background = 'linear-gradient(90deg,#c0392b,#e74c3c)';
   else if (pct > 30) hudBar.style.background = 'linear-gradient(90deg,#e74c3c,#ff9a3c)';
   else               hudBar.style.background = 'linear-gradient(90deg,#ff9a3c,var(--gold))';
@@ -57,6 +57,16 @@ function updateHUD() {
 function showHUD(show) {
   hud.classList.toggle('hidden', !show);
   if (show) updateHUD();
+}
+
+// Animação do monstro no HUD ao receber dano ou se curar
+function animateHUDMonster(pontos) {
+  const wrap = document.getElementById('hud-monster');
+  if (!wrap) return;
+  wrap.classList.remove('hud-monster-hit', 'hud-monster-heal');
+  void wrap.offsetWidth;
+  wrap.classList.add(pontos > 0 ? 'hud-monster-hit' : 'hud-monster-heal');
+  setTimeout(() => wrap.classList.remove('hud-monster-hit', 'hud-monster-heal'), 650);
 }
 
 // ---------- Partículas de fundo ----------------------------------------
@@ -264,6 +274,8 @@ function startGame() {
   state.vidaMaxima    = CONFIG.vidaInicialIncidente;
   state.questionIndex = 0;
   state.questions     = buildQuestions();
+  state.danosPorChar  = {};
+  PERSONAGENS.forEach(p => { state.danosPorChar[p.id] = 0; });
   screenAction();
 }
 
@@ -354,8 +366,11 @@ function answer(i) {
   // Aplica dano / cura ao incidente
   // pontos = 20 → tira 20; pontos = 10 → tira 10; pontos = -10 → adiciona 10
   state.vidaIncidente -= pontos;
-  // Permite que a vida suba acima do máximo (respostas erradas)
   state.vidaMaxima = Math.max(state.vidaMaxima, state.vidaIncidente);
+
+  // Acumula dano por personagem
+  const charId = q.personagem.id;
+  state.danosPorChar[charId] = (state.danosPorChar[charId] || 0) + pontos;
 
   const opEls = document.querySelectorAll('.option');
   opEls.forEach((el, idx) => {
@@ -366,6 +381,7 @@ function answer(i) {
   });
 
   updateHUD();
+  animateHUDMonster(pontos);
 
   // Indicador flutuante
   floatDamage(pontos);
@@ -525,10 +541,45 @@ function shootBeam(stage, cor) {
   }, 350);
 }
 
+function buildRankingHTML() {
+  const ranking = PERSONAGENS
+    .map(p => ({ p, dano: state.danosPorChar[p.id] || 0 }))
+    .sort((a, b) => b.dano - a.dano);
+
+  const mvp = ranking[0];
+
+  const cards = ranking.map(({ p, dano }, i) => {
+    const isWinner = i === 0;
+    const danoLabel = dano > 0
+      ? `<span style="color:var(--green)">−${dano} HP</span>`
+      : dano < 0
+        ? `<span style="color:var(--red)">+${Math.abs(dano)} HP ao incidente</span>`
+        : `<span style="color:var(--ink-soft)">0 HP</span>`;
+    return `
+      <div class="rank-card panel ${isWinner ? 'rank-mvp' : ''}" style="--char:${p.cor}; animation-delay:${i * 0.1}s">
+        ${isWinner ? '<div class="rank-crown">👑 MVP</div>' : `<div class="rank-pos">#${i + 1}</div>`}
+        ${pixelSVG(p.id, { pixel: 4, idle: false })}
+        <div class="rank-name">${p.nome}</div>
+        <div class="rank-dano">${danoLabel}</div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="ranking-section">
+      <div class="ranking-title">Dano causado ao Incidente</div>
+      <div class="ranking-cards">${cards}</div>
+      <p class="ranking-mvp-msg">
+        Melhor desempenho: <strong style="color:${mvp.p.cor}">${mvp.p.nome}</strong>
+        com <strong>${Math.max(0, mvp.dano)} HP</strong> de dano ao Incidente
+      </p>
+    </div>`;
+}
+
 function revealResult(venceu, incident) {
   const box = document.getElementById('finale-result');
   const total = state.questions.length;
   const qRespondidas = Math.min(state.questionIndex + 1, total);
+  const ranking = buildRankingHTML();
 
   if (venceu) {
     if (incident) incident.classList.add('flee');
@@ -537,10 +588,10 @@ function revealResult(venceu, incident) {
       <div class="result win">INCIDENTE DERROTADO!</div>
       <div class="score-line">O incidente foi contido em <strong>${qRespondidas}</strong> de ${total} perguntas</div>
       <p class="message">
-        O Incidente em Produção foi vencido! Não pela força de um só —
-        mas porque cada especialista comunicou, pediu ajuda e agiu junto.
-        É exatamente assim que <strong>a gente vai de turma</strong>. 🎉
+        Não pela força de um só — mas porque cada especialista comunicou,
+        pediu ajuda e agiu junto. É exatamente assim que <strong>a gente vai de turma</strong>. 🎉
       </p>
+      ${ranking}
       <button class="btn secondary" onclick="screenKaiju()">Jogar Novamente 🔁</button>
     `;
   } else {
@@ -548,13 +599,12 @@ function revealResult(venceu, incident) {
     const vidaRestante = Math.max(0, state.vidaIncidente);
     box.innerHTML = `
       <div class="result lose">INCIDENTE PERSISTE...</div>
-      <div class="score-line">O incidente ainda tem <strong>${vidaRestante}</strong> pontos de vida</div>
-      <div class="score-line">A turma respondeu todas as <strong>${total}</strong> perguntas sem zerar a vida do monstro</div>
+      <div class="score-line">O incidente ainda tem <strong>${vidaRestante} HP</strong> restante</div>
       <p class="message">
-        O incidente resistiu desta vez. A lição fica: cada decisão de
-        ir de turma — comunicar, colaborar, pedir e dar ajuda — é o que
-        transforma crises em vitórias coletivas. Bora tentar de novo! 💪
+        O incidente resistiu desta vez. Cada decisão de ir de turma —
+        comunicar, colaborar, pedir e dar ajuda — é o que transforma crises em vitórias. 💪
       </p>
+      ${ranking}
       <button class="btn secondary" onclick="screenKaiju()">Tentar Novamente 🔁</button>
     `;
   }
@@ -588,4 +638,7 @@ document.getElementById('btn-fullscreen').addEventListener('click', () => {
 
 // ---------- Boot ------------------------------------------------------
 makeStars();
+// Injeta o SVG do incidente no HUD (pixelSVG só existe após characters.js carregar)
+const _hudMonster = document.getElementById('hud-monster');
+if (_hudMonster) _hudMonster.innerHTML = pixelSVG('incident', { pixel: 4, idle: false });
 screenKaiju();
