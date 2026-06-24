@@ -7,7 +7,7 @@ const CONFIG = {
   pontosPorAcerto: 20,
   pontuacaoMaxima: 300,
   limiteParaVencer: 200,
-  tempoDiscussao: 60
+  tempoDiscussao: 120
 };
 
 const PERSONAGENS = [
@@ -66,150 +66,150 @@ const PERSONAGENS = [
 const CENARIOS = {
   frontend: [
     {
-      titulo: 'Ação 1 — Bug em produção',
-      situacao: 'A tela principal do app trava para os usuários em produção. Reclamações chegam em tempo real. O que o Dev Front-End faz?',
+      titulo: 'Situação 1 — Dois caminhos, uma deadline',
+      situacao: `Sprint fecha amanhã. O Dev Front-End já tem uma solução funcionando, mas percebe que a abordagem escolhida vai criar um problema de performance grave em dois meses. Refatorar agora atrasa a entrega; entregar assim prejudica o futuro. O Tech Lead não está disponível. O que fazer?`,
       opcoes: [
-        { texto: 'Avisa o canal do time, compartilha o erro e aciona Back-End e QA para investigarem juntos.', correta: true, feedback: 'Comunicar e convocar a turma é a resposta mais rápida e segura para incidentes.' },
-        { texto: 'Tenta corrigir sozinho no código sem avisar ninguém para não parecer que não sabe.', correta: false, feedback: 'Silêncio em incidente prolonga o impacto e priva o time de ajudar.' },
-        { texto: 'Aguarda — parece bug pequeno que vai se resolver sozinho.', correta: false, feedback: 'Esperar sem comunicar é a pior decisão em produção.' }
+        { texto: 'Entrega como está e registra a dívida técnica no backlog com uma nota explicando o risco — decisão de prioridade é do time, não minha sozinha.', correta: true, feedback: 'Entregar com transparência e registrar o risco é colaborar com o time mesmo à distância. Quem decide a prioridade é a turma, não um indivíduo isolado.' },
+        { texto: 'Refatora por conta própria e comunica depois, assumindo o atraso como necessário — melhor pedir perdão do que autorização.', correta: false, feedback: 'Tomar decisão unilateral que afeta toda a sprint sem comunicar viola a autonomia coletiva do time, mesmo com boas intenções.' },
+        { texto: 'Paralisa e aguarda o Tech Lead — uma decisão assim não deve ser tomada sem a liderança técnica presente.', correta: false, feedback: 'Travar a entrega enquanto espera aprovação que pode não chegar gera bloqueio desnecessário. O time precisa fluir com autonomia responsável.' }
       ]
     },
     {
-      titulo: 'Ação 2 — Prazo vs. qualidade',
-      situacao: 'Uma feature nova depende de uma API que o Back-End ainda não terminou. A sprint fecha em dois dias. O que fazer?',
+      titulo: 'Situação 2 — O colega que sabe mais',
+      situacao: `O Dev Front-End está travado num problema de CSS complexo há três horas. Sabe que o colega de Back-End já resolveu algo parecido antes, mas hesita em pedir ajuda — parece que está pedindo para o Back-End "fazer o trabalho dele". A reunião de demo é em duas horas. O que faz?`,
       opcoes: [
-        { texto: 'Alinha com o Back-End para criar um mock e segue em paralelo, avisando o PO do ajuste.', correta: true, feedback: 'Trabalhar em paralelo com comunicação transparente mantém a turma avançando.' },
-        { texto: 'Entrega a feature pela metade sem avisar o PO para não decepcionar.', correta: false, feedback: 'Entregar incompleto sem avisar quebra a confiança do time.' },
-        { texto: 'Para tudo e fica esperando, bloqueado, sem falar com ninguém.', correta: false, feedback: 'Travar sem comunicar paralisa a turma inteira.' }
+        { texto: 'Continua tentando resolver sozinho — pedir ajuda de Back-End num problema de Front-End seria embaraçoso e desviaria o colega do trabalho dele.', correta: false, feedback: 'Orgulho técnico que paralisa é inimigo do time. Dois colegas desbloqueiam em 10 minutos o que um levaria horas — e a demo não espera.' },
+        { texto: 'Pede ajuda ao colega de Back-End diretamente, explica o contexto e resolve junto — resolver problemas cruzando fronteiras é trabalho em equipe na prática.', correta: true, feedback: 'Pedir ajuda a tempo é competência, não fraqueza. Fronteiras entre especialidades não devem existir quando o prazo e o produto estão em risco.' },
+        { texto: 'Avisa o Tech Lead que não vai conseguir entregar e pede para retirar o item da demo — melhor ser honesto do que entregar algo ruim.', correta: false, feedback: 'Desistir sem antes tentar buscar ajuda disponível é desperdiçar um recurso que o time tem. Comunicar o risco é certo; tentar a solução colaborativa primeiro é melhor ainda.' }
       ]
     },
     {
-      titulo: 'Ação 3 — O feedback do usuário',
-      situacao: 'Pesquisa de satisfação indica que os usuários acham a navegação confusa. O Dev Front-End tem suas próprias ideias, mas o UX Designer tem outro ponto de vista. Como age?',
+      titulo: 'Situação 3 — Aprovação que não chega',
+      situacao: `O Dev Front-End finalizou o componente novo e está esperando aprovação de PR do colega de Back-End há dois dias. O colega está sobrecarregado. Sem o merge, três outras pessoas do time estão bloqueadas. Como agir?`,
       opcoes: [
-        { texto: 'Ignora o UX e implementa do jeito que acha certo, afinal é ele quem coda.', correta: false, feedback: 'Ignorar o UX fragmenta o produto e a turma.' },
-        { texto: 'Senta com o UX Designer para co-criar a solução unindo visão técnica e de experiência.', correta: true, feedback: 'Front-End e UX juntos entregam a melhor experiência. A gente vai de turma!' },
-        { texto: 'Escala para o PO decidir sozinho para não entrar em conflito.', correta: false, feedback: 'Fugir do diálogo direto adia o problema e sobrecarrega o PO.' }
+        { texto: 'Mergeia o PR por conta própria — já revisou o próprio código, está confiante, e o bloqueio do time é mais urgente que o processo.', correta: false, feedback: 'Burlar o processo de revisão, mesmo com boa intenção, cria precedente perigoso e retira a segunda visão que o PR review serve justamente para dar.' },
+        { texto: 'Continua esperando em silêncio para não parecer impaciente ou que está "cobrando" o colega ocupado.', correta: false, feedback: 'Silêncio quando o time está bloqueado não é cortesia — é omissão. Nomear o bloqueio em voz alta é parte do trabalho.' },
+        { texto: 'Sinaliza o bloqueio no canal do time de forma objetiva, oferece fazer um pair review ao vivo com o colega para agilizar e propõe uma solução para as pessoas travadas enquanto isso.', correta: true, feedback: 'Tornar o bloqueio visível e propor uma saída colaborativa é exatamente o que mantém o time fluindo sem jogar pressão sobre ninguém.' }
       ]
     }
   ],
 
   backend: [
     {
-      titulo: 'Ação 1 — Alerta às 3h da manhã',
-      situacao: 'A API caiu em produção às 3h durante um deploy crítico. O Dev Back-End é o único on-call. Como age?',
+      titulo: 'Situação 1 — O hotfix que pode quebrar mais',
+      situacao: `São 23h. A API de pagamento está com latência crítica em produção afetando os clientes. O Dev Back-End identificou a causa e tem um fix rápido pronto — mas sabe que não testou o impacto no módulo de conciliação. Aplicar agora pode resolver ou piorar. Esperar até amanhã mantém o problema. O que faz?`,
       opcoes: [
-        { texto: 'Tenta resolver sozinho em silêncio para não parecer fraco ou desinformado.', correta: false, feedback: 'Incidente crítico sem time aumenta o tempo de resposta e o impacto.' },
-        { texto: 'Aciona o canal de incidente, compartilha os logs e chama quem puder ajudar a diagnosticar.', correta: true, feedback: 'Ninguém resolve incidente crítico melhor do que uma turma alinhada.' },
-        { texto: 'Deixa para manhã para não incomodar os colegas fora do horário.', correta: false, feedback: 'Produção parada não espera o horário comercial.' }
+        { texto: 'Aplica o hotfix agora — a latência está impactando clientes ativamente, e o risco de esperar é maior do que o risco do fix não testado.', correta: false, feedback: 'Decisão sob pressão sem validar o risco secundário é a principal causa de incidentes que viram dois incidentes. O fix que quebra a conciliação pode ser pior do que a latência.' },
+        { texto: 'Aciona o canal de incidente, apresenta o diagnóstico, o fix disponível e o risco não testado — e decide com o time qual caminho tomar.', correta: true, feedback: 'Decisão de risco em produção à noite não é para ser tomada sozinho. Trazer o dilema para o time, mesmo que de forma assíncrona, é responsabilidade técnica e coletiva.' },
+        { texto: 'Espera até a manhã para ter mais pessoas disponíveis e testar adequadamente — melhor um problema contido a noite do que um incidente maior amanhã de manhã.', correta: false, feedback: 'Aguardar sem comunicar que o problema foi identificado e que existe um fix disponível priva o time e a liderança de tomar uma decisão informada.' }
       ]
     },
     {
-      titulo: 'Ação 2 — Vulnerabilidade no código alheio',
-      situacao: 'Revisando o código, o Dev Back-End encontra uma vulnerabilidade de segurança no PR de um colega. O que faz?',
+      titulo: 'Situação 2 — A solução do colega que funciona, mas está errada',
+      situacao: `O Dev Back-End percebe que a solução implementada pelo colega na semana passada — já em produção — resolve o problema imediato mas cria um acoplamento forte que vai dificultar qualquer evolução futura. O colega ficou orgulhoso da entrega. Como age?`,
       opcoes: [
-        { texto: 'Ignora — não é o código dele, e apontar isso pode gerar conflito.', correta: false, feedback: 'Omitir vulnerabilidade por conforto expõe o produto e a turma.' },
-        { texto: 'Corrige o código silenciosamente sem avisar o colega, para ganhar tempo.', correta: false, feedback: 'Corrigir sem comunicar impede o colega de aprender e cria dependência.' },
-        { texto: 'Avisa o colega com respeito, explica o risco e sugere corrigirem ou revisarem juntos.', correta: true, feedback: 'Feedback direto e respeitoso fortalece o código e a turma.' }
+        { texto: 'Abre um PR com a refatoração que considera correta, sem avisar o colega, e explica na descrição do PR o motivo técnico.', correta: false, feedback: 'Refatorar o trabalho do colega sem conversa direta, mesmo com argumento técnico válido, gera atrito, quebra confiança e priva o colega de participar da decisão.' },
+        { texto: 'Marca uma conversa com o colega, reconhece o que funcionou na solução e apresenta a preocupação técnica com dados concretos — propõe que decidam juntos o próximo passo.', correta: true, feedback: 'Feedback técnico bem dado é presente, não crítica. Reconhecer o que funcionou antes de apontar o problema é o que transforma a conversa em colaboração.' },
+        { texto: 'Registra a preocupação no backlog técnico e não fala nada diretamente — o colega vai descobrir o problema quando o sistema escalar.', correta: false, feedback: 'Deixar o problema para "o futuro descobrir" é terceirizar a responsabilidade. O time paga o custo do silêncio técnico mais cedo do que parece.' }
       ]
     },
     {
-      titulo: 'Ação 3 — Documentação desatualizada',
-      situacao: 'Ninguém usa a documentação das APIs porque está defasada. O Front-End perde horas toda semana tentando entender os endpoints. O que o Back-End faz?',
+      titulo: 'Situação 3 — A feature que está sendo feita em duplicata',
+      situacao: `O Dev Back-End descobre, no meio do desenvolvimento, que outro time na empresa está construindo exatamente o mesmo serviço. Não há overlap formal entre os projetos. Comunicar isso pode atrasar a sprint atual, mas não comunicar pode gerar retrabalho enorme para toda a organização. O que faz?`,
       opcoes: [
-        { texto: 'Atualiza por conta própria, em silêncio, sem comunicar o time.', correta: false, feedback: 'Atualizar sem envolver o time não resolve o problema estrutural.' },
-        { texto: 'Propõe uma sessão rápida com o time para definir juntos um padrão e dividir a responsabilidade.', correta: true, feedback: 'Documentação é responsabilidade coletiva. A turma que define junta, usa junta.' },
-        { texto: 'Considera que é problema de quem vai usar — quem precisa que pergunte.', correta: false, feedback: '"Quem precisar que pergunte" desperdiça tempo e quebra autonomia do time.' }
+        { texto: 'Continua desenvolvendo — a duplicidade é problema de planejamento da empresa, não responsabilidade técnica do desenvolvedor de um time.', correta: false, feedback: 'Ignorar informação que evitaria retrabalho organizacional por não ser "responsabilidade minha" é um exemplo claro do custo do trabalho em silos.' },
+        { texto: 'Para completamente o desenvolvimento e escala o problema para a gestão resolver antes de continuar qualquer linha de código.', correta: false, feedback: 'Paralisar sem proposta é gerar ansiedade sem saída. Sinalizar o problema e continuar com o que já está claro enquanto a conversa acontece é mais eficiente.' },
+        { texto: 'Sinaliza a duplicidade para o Tech Lead e para o time imediatamente com evidências, propõe uma reunião rápida entre os dois times para alinhar, e continua o desenvolvimento do que não tem sobreposição enquanto isso.', correta: true, feedback: 'Trazer informação estratégica para a superfície com uma proposta concreta é o que transforma um desenvolvedor em alguém que pensa no coletivo, não só na tarefa.' }
       ]
     }
   ],
 
   dados: [
     {
-      titulo: 'Ação 1 — Relatório inconsistente',
-      situacao: 'O relatório gerencial está com dados incorretos e a reunião começa em 30 minutos. O Engenheiro de Dados percebe o problema. O que faz?',
+      titulo: 'Situação 1 — O número que contradiz a liderança',
+      situacao: `O Engenheiro de Dados conclui a análise e os resultados contradizem diretamente a aposta estratégica que a diretoria anunciou na semana passada. Os dados são sólidos, mas apresentá-los pode ser politicamente desconfortável. A reunião de revisão de resultados é amanhã. O que faz?`,
       opcoes: [
-        { texto: 'Esconde o problema e apresenta mesmo sabendo que os dados estão errados.', correta: false, feedback: 'Apresentar dados errados mina a confiança em toda a área.' },
-        { texto: 'Avisa o gestor e o time imediatamente, explica o problema e propõe um plano de contingência.', correta: true, feedback: 'Transparência rápida e solução em turma é o que salva a reunião e a credibilidade.' },
-        { texto: 'Cancela a reunião por conta própria sem consultar ninguém.', correta: false, feedback: 'Cancelar unilateralmente sem comunicar gera caos desnecessário.' }
+        { texto: 'Apresenta os dados como estão, com clareza metodológica, e oferece contexto para ajudar na interpretação — a função dos dados é informar a decisão, não confirmá-la.', correta: true, feedback: 'Dados que desafiam a narrativa são os mais valiosos. Um engenheiro que suaviza números por conforto político destrói o único ativo que a área de dados tem: a confiança.' },
+        { texto: 'Apresenta os dados mas inclui ressalvas e limitações de forma a suavizar a contradição — a mensagem chega, mas de forma mais palatável para o momento.', correta: false, feedback: 'Suavizar intencionalmente a leitura dos dados para proteger uma narrativa é uma forma sutil de desonestidade analítica. O time perde a chance de corrigir o rumo com as informações reais.' },
+        { texto: 'Agenda uma conversa privada com o gestor antes da reunião para apresentar os dados de forma reservada e deixar que ele decida como levar isso ao grupo.', correta: false, feedback: 'Filtrar os dados pela liderança antes de compartilhar com o time cria um canal de controle da informação que mina a transparência e a confiança coletiva nos dados.' }
       ]
     },
     {
-      titulo: 'Ação 2 — Dado que ninguém entende',
-      situacao: 'Um analista de negócio não consegue interpretar o dashboard entregue pelo Engenheiro de Dados e está tomando decisões erradas. Como age?',
+      titulo: 'Situação 2 — O pipeline que o time não entende',
+      situacao: `O Engenheiro de Dados construiu um pipeline de dados complexo que só ele entende completamente. Nas últimas semanas, dois incidentes ocorreram quando o pipeline falhou e ninguém mais sabia como agir. O eng. percebe que está se tornando um gargalo crítico. O que faz?`,
       opcoes: [
-        { texto: 'Manda um e-mail técnico longo e considera o assunto resolvido.', correta: false, feedback: 'E-mail técnico sem diálogo não garante entendimento nem decisão correta.' },
-        { texto: 'Diz que interpretar é responsabilidade do analista — ele que aprenda.', correta: false, feedback: 'Dado sem contexto não serve ao negócio. O valor é no entendimento, não na entrega.' },
-        { texto: 'Agenda uma sessão rápida, escuta a dúvida e explica o dado em linguagem do negócio.', correta: true, feedback: 'Dado que une engenharia e negócio é dado que gera valor. A gente vai de turma!' }
+        { texto: 'Documenta o pipeline detalhadamente e disponibiliza a documentação no repositório — quem precisar saber é só ler.', correta: false, feedback: 'Documentação estática não transfere conhecimento tácito de forma eficiente. A dependência de um único indivíduo é risco estrutural que documentação escrita raramente resolve sozinha.' },
+        { texto: 'Propõe sessões de transferência de conhecimento com o time, refatora partes do pipeline para reduzir complexidade e estabelece uma rotina de revisão coletiva das pipelines críticas.', correta: true, feedback: 'Reduzir a própria indispensabilidade é um ato de maturidade técnica e de confiança no time. Conhecimento que circula é conhecimento que protege a turma toda.' },
+        { texto: 'Mantém como está mas garante estar sempre disponível on-call para intervir rapidamente quando necessário — é mais eficiente do que tentar explicar algo muito complexo.', correta: false, feedback: '"Estar sempre disponível" como solução para concentração de conhecimento é uma bomba-relógio. Férias, desligamentos e emergências simultâneas não combinam com ponto único de falha humano.' }
       ]
     },
     {
-      titulo: 'Ação 3 — Risco invisível no pipeline',
-      situacao: 'O Engenheiro percebe que o pipeline de ETL vai falhar no próximo mês com o aumento de volume previsto. Ninguém mais sabe disso. O que faz?',
+      titulo: 'Situação 3 — A demanda que chega por fora',
+      situacao: `Um VP de outra área procura diretamente o Engenheiro de Dados pedindo uma análise urgente "off the books" — não está no backlog, não tem alinhamento com o time. O VP deixa claro que é prioridade alta para ele, mas pede discrição. O que faz?`,
       opcoes: [
-        { texto: 'Espera o problema acontecer e conserta na hora — menos trabalho agora.', correta: false, feedback: 'Deixar o risco explodir cria crise evitável e sobrecarrega toda a turma.' },
-        { texto: 'Compartilha a análise com o time e planeja a solução preventiva junto com os envolvidos.', correta: true, feedback: 'Antecipar e compartilhar riscos é o maior presente que a turma pode dar a si mesma.' },
-        { texto: 'Resolve sozinho sem falar nada para mostrar que é indispensável.', correta: false, feedback: 'Ser indispensável por sigilo é fragilidade disfarçada de força.' }
+        { texto: 'Atende o pedido com discrição conforme solicitado — é um VP, a hierarquia tem que ser respeitada, e contraria-lo pode ter consequências.', correta: false, feedback: 'Aceitar demandas paralelas por pressão hierárquica sem transparência com o time cria desequilíbrio no backlog, sobrecarrega o indivíduo e opera fora do processo coletivo que o time acordou.' },
+        { texto: 'Recusa diretamente — qualquer demanda precisa passar pelo processo oficial de priorização do time, sem exceções.', correta: false, feedback: 'Recusar sem oferecer um caminho viável pode ser correto em princípio, mas desrespeita a urgência legítima do interlocutor e fecha a conversa sem solução.' },
+        { texto: 'Escuta o pedido, avalia o esforço, e propõe ao VP que a demanda entre no backlog do time de forma visível — explica que trabalho invisível prejudica tanto o time quanto a qualidade da análise.', correta: true, feedback: 'Tornar o trabalho visível não é burocracia — é respeito pelo time e pelo próprio trabalho. Um VP que entende o processo é um aliado; um processo contornado vira precedente.' }
       ]
     }
   ],
 
   ux: [
     {
-      titulo: 'Ação 1 — Design vs. prazo',
-      situacao: 'O UX Designer propôs uma interação inovadora, mas o time de Dev avisa que levaria o triplo do tempo para implementar no prazo. Como age?',
+      titulo: 'Situação 1 — O usuário contra o negócio',
+      situacao: `Os testes com usuários mostram claramente que a funcionalidade nova confunde as pessoas e aumentaria o abandono. Mas ela representa uma receita significativa para a empresa e já foi anunciada externamente. O UX Designer tem os dados. A entrega é em 10 dias. O que faz?`,
       opcoes: [
-        { texto: 'Insiste no design original — é responsabilidade do Dev encontrar como implementar.', correta: false, feedback: 'Ignorar viabilidade técnica produz atrito e atraso para a turma toda.' },
-        { texto: 'Simplifica tudo sozinho sem consultar ninguém, entregando algo genérico.', correta: false, feedback: 'Simplificar sem diálogo pode perder o ponto central da experiência.' },
-        { texto: 'Senta com o Dev para co-criar uma solução que equilibre a experiência desejada e o prazo real.', correta: true, feedback: 'Design e engenharia em diálogo: o resultado é sempre melhor do que sozinhos.' }
+        { texto: 'Apresenta os dados de pesquisa de forma completa para os stakeholders, propõe ajustes que poderiam reduzir o atrito sem abandonar a funcionalidade, e deixa a decisão final com o grupo — mas com os riscos claramente documentados.', correta: true, feedback: 'UX não é poder de veto — é poder de evidência. Trazer os dados com uma proposta construtiva é o que transforma tensão em decisão informada e coletiva.' },
+        { texto: 'Bloqueia internamente a entrega e escala o problema para a liderança de produto — não é ético entregar algo que sabe que vai prejudicar o usuário.', correta: false, feedback: 'Bloquear unilateralmente sem proposta alternativa é transformar evidência em obstrução. O papel do UX é iluminar, não vetar.' },
+        { texto: 'Implementa o design como pedido e registra sua discordância formalmente em e-mail — protegeu-se tecnicamente e cumpriu o que foi pedido.', correta: false, feedback: 'Cumprir e registrar discordância sem tentar mudar o resultado é conforto burocrático. O time perdeu a chance de uma decisão melhor porque o UX não insistiu com dados na mesa.' }
       ]
     },
     {
-      titulo: 'Ação 2 — Feedbacks contraditórios',
-      situacao: 'Testes com usuários apontam um caminho, mas a liderança pede o oposto. O UX Designer está no meio. Como conduz?',
+      titulo: 'Situação 2 — O redesign que o time não pediu',
+      situacao: `Durante o desenvolvimento, o UX Designer percebe que a jornada aprovada tem um problema estrutural que vai criar fricção real para o usuário. Corrigir exigiria reprojetar parte do fluxo, o que atrasa a entrega e exige retrabalho do time de Dev. Mas entregar como está vai gerar reclamações. O que faz?`,
       opcoes: [
-        { texto: 'Segue a liderança sem questionar — hierarquia acima de tudo.', correta: false, feedback: 'Ceder sem trazer a evidência do usuário é desperdiçar o papel do UX.' },
-        { texto: 'Ignora a liderança e vai com os dados dos usuários, sem comunicar o conflito.', correta: false, feedback: 'Agir sem alinhar cria retrabalho e desconfiança.' },
-        { texto: 'Apresenta os dados dos usuários para a liderança e facilita uma decisão conjunta baseada em evidência.', correta: true, feedback: 'O UX que conecta dados e decisão protege o usuário e alinha a turma.' }
+        { texto: 'Corrige o fluxo por conta própria e apresenta ao time como "melhoria identificada durante a implementação" — evita a impressão de que a aprovação anterior foi um erro.', correta: false, feedback: 'Mudar o escopo sem comunicar o time gera retrabalho invisível, cria desconfiança e priva a turma de decidir coletivamente sobre o trade-off.' },
+        { texto: 'Entrega como aprovado e registra o problema identificado para a próxima versão — o que foi aprovado em conjunto deve ser respeitado, mesmo com limitações.', correta: false, feedback: 'Respeitar o processo anterior a ponto de entregar algo que já sabe que vai falhar é confundir processo com produto. O time precisa de informação nova para tomar decisão nova.' },
+        { texto: 'Apresenta o problema ao time com clareza: o que foi identificado, qual o impacto para o usuário, qual seria o custo da correção — e propõe que decidam juntos entre corrigir agora ou fazer uma versão 1.1 com o fix.', correta: true, feedback: 'Trazer um problema novo com dados e opções é colaborar, não complicar. O time que decide com informação completa entrega com mais confiança.' }
       ]
     },
     {
-      titulo: 'Ação 3 — Protótipo sem teste',
-      situacao: 'O prazo apertou e o UX precisaria entregar o protótipo sem fazer os testes com usuários reais. O que faz?',
+      titulo: 'Situação 3 — O design que ninguém usa',
+      situacao: `O UX Designer entrega um sistema de design completo e documentado. Três semanas depois, percebe que os desenvolvedores estão ignorando os componentes e construindo soluções próprias. A interface está ficando inconsistente. Como age?`,
       opcoes: [
-        { texto: 'Entrega sem testar e não fala nada para não parecer que ficou devendo.', correta: false, feedback: 'Silenciar o risco coloca a turma em posição vulnerável na entrega.' },
-        { texto: 'Adia a entrega por conta própria sem avisar o time.', correta: false, feedback: 'Decisão unilateral sem comunicar quebra o fluxo da sprint.' },
-        { texto: 'Comunica o risco ao PO e propõe alternativas: teste rápido com colegas ou entrega marcada como hipótese.', correta: true, feedback: 'Transparência sobre risco é parte do trabalho. A turma decide junta.' }
+        { texto: 'Escalona o problema para o Tech Lead pedindo que seja obrigatório seguir o design system — sem enforcement, o sistema não funciona.', correta: false, feedback: 'Usar hierarquia para forçar adoção de ferramenta que o time não está usando é sintoma de que o problema é de adoção, não de disciplina. A causa real precisa ser investigada antes da solução.' },
+        { texto: 'Atualiza a documentação tornando-a mais detalhada e visual, e reenvia ao time com um guia de uso — talvez não estejam usando por falta de clareza.', correta: false, feedback: 'Mais documentação para resolver um problema de não-adoção raramente funciona. O problema pode ser de processo, ferramenta, ou de como o design system foi construído — sem escutar o time, não se sabe.' },
+        { texto: 'Conversa com os desenvolvedores para entender por que não estão usando o sistema — o que está difícil, o que está faltando — e propõe um ciclo de melhoria do design system com input deles.', correta: true, feedback: 'Design system que o time não usa é design system que foi construído sem o time. Escutar quem não está usando é o primeiro passo para transformar rejeição em adoção.' }
       ]
     }
   ],
 
   po: [
     {
-      titulo: 'Ação 1 — A decisão de arquitetura',
-      situacao: 'O time está dividido sobre qual abordagem técnica usar em uma feature crítica. O debate se arrasta e o prazo aperta. O Tech Lead precisa agir. Como?',
+      titulo: 'Situação 1 — A estimativa que o time não acredita',
+      situacao: `O negócio comprometeu externamente a entrega de uma feature em 3 semanas. O Tech Lead vai ao time estimar e a resposta coletiva é: mínimo 6 semanas com qualidade. O prazo já foi comunicado ao cliente. Como o Tech Lead age?`,
       opcoes: [
-        { texto: 'Impõe a solução que considera mais adequada — afinal, tem mais experiência.', correta: false, feedback: 'Impor decisão sem escuta desperdiça o conhecimento do time e cria ressentimento.' },
-        { texto: 'Deixa o time decidir sozinho para não parecer centralizador.', correta: false, feedback: 'Omitir liderança técnica quando o time está travado prolonga o impasse.' },
-        { texto: 'Organiza uma conversa rápida, escuta os argumentos, contribui com sua visão e facilita a decisão coletiva com critérios claros.', correta: true, feedback: 'Tech Lead que facilita decisão técnica com o time constrói autonomia e coesão.' }
+        { texto: 'Aceita o prazo de 3 semanas com o time e tenta comprar velocidade cortando escopo internamente sem avisar o cliente — entrega algo, negocia o resto depois.', correta: false, feedback: 'Comprometer o time com prazo que não acredita gera queima de energia, qualidade comprometida e, quase sempre, o problema de prazo só adiado — não resolvido.' },
+        { texto: 'Leva para o negócio e para o cliente os dados reais de estimativa com o risco técnico documentado, e propõe um plano alternativo: escopo reduzido em 3 semanas ou feature completa em 6.', correta: true, feedback: 'Tech Lead que protege o time da pressão de prazo impossível, com dados e proposta na mão, é liderança. Quem decide o trade-off é o cliente informado, não o desenvolvedor sozinho.' },
+        { texto: 'Divide o time em dois grupos para trabalhar em paralelo e tentar comprimir o prazo — com mais pessoas focadas, talvez 4 semanas seja possível.', correta: false, feedback: 'A Lei de Brooks diz que adicionar pessoas a um projeto atrasado o atrasa mais. Compressão de prazo com paralelismo de pessoas raramente funciona sem custo em coordenação e qualidade.' }
       ]
     },
     {
-      titulo: 'Ação 2 — O dev júnior travado',
-      situacao: 'Um desenvolvedor júnior está há dois dias preso em um problema e não pediu ajuda para não parecer incompetente. O Tech Lead percebe. O que faz?',
+      titulo: 'Situação 2 — O conflito que o time não está resolvendo',
+      situacao: `Há duas semanas, dois membros seniores do time têm visões técnicas opostas sobre como construir um módulo crítico. O impasse está bloqueando a sprint inteira. Ambos têm argumentos válidos. Nenhum cede. O Tech Lead precisa agir. O que faz?`,
       opcoes: [
-        { texto: 'Resolve o problema pelo júnior sem envolvê-lo, para não perder tempo.', correta: false, feedback: 'Resolver por ele priva o júnior do aprendizado e cria dependência.' },
-        { texto: 'Espera o júnior pedir ajuda — iniciativa própria faz parte do crescimento.', correta: false, feedback: 'Deixar alguém travado por orgulho prejudica o time e o próprio colaborador.' },
-        { texto: 'Abre espaço para o júnior compartilhar o problema e os resolve juntos, reforçando que pedir ajuda é parte do trabalho.', correta: true, feedback: 'Criar cultura de ajuda mútua começa pelo exemplo do Tech Lead.' }
+        { texto: 'Escolhe a solução tecnicamente mais sólida na sua avaliação e anuncia a decisão ao time — Tech Lead existe para destravar impasses técnicos, e ambiguidade prolongada custa mais do que uma decisão imperfeita.', correta: false, feedback: 'Decisão imposta sem processo pode resolver o impasse imediato mas cria ressentimento. O membro desconsiderado pode se desengajar — e o time perde perspectiva valiosa.' },
+        { texto: 'Organiza uma sessão estruturada onde cada um apresenta os argumentos, o time inteiro vota, e o resultado é documentado como decisão coletiva — todos são responsáveis pelo caminho escolhido.', correta: true, feedback: 'Transformar um conflito bilateral em decisão coletiva redistribui a responsabilidade e reduz o ego investido nas opções. O time sai alinhado e os dois seniores continuam engajados.' },
+        { texto: 'Propõe fazer um spike de dois dias com cada abordagem e decidir com base nos resultados — deixa o código falar, não a opinião.', correta: false, feedback: 'Spikes são úteis para incerteza técnica genuína, não para impasses onde os dois lados já têm dados. Quatro dias de spike quando o time já está há duas semanas parado piora o bloqueio.' }
       ]
     },
     {
-      titulo: 'Ação 3 — Dívida técnica vs. nova feature',
-      situacao: 'O negócio pressiona por uma nova feature, mas o Tech Lead sabe que a dívida técnica acumulada vai tornar a entrega instável. Como age?',
+      titulo: 'Situação 3 — A inovação que vem de fora da hierarquia',
+      situacao: `Um desenvolvedor júnior do time propõe uma mudança de arquitetura que, na avaliação inicial do Tech Lead, parece promissora e pode poupar semanas de trabalho futuro. Mas implementar a proposta agora muda o plano da sprint atual. O time está cético com a ideia do júnior. Como o Tech Lead conduz?`,
       opcoes: [
-        { texto: 'Entrega a feature sem falar da dívida — problema técnico é problema técnico.', correta: false, feedback: 'Omitir risco técnico ao negócio cria surpresas ruins e erosão de confiança.' },
-        { texto: 'Recusa a demanda unilateralmente para proteger a qualidade do código.', correta: false, feedback: 'Bloquear sem negociar isola a área técnica e gera atrito desnecessário.' },
-        { texto: 'Apresenta o risco com clareza ao time e ao negócio, propõe um plano que equilibra a entrega e a saúde técnica, e decide junto.', correta: true, feedback: 'Tech Lead que traduz risco técnico em linguagem de negócio une os dois mundos.' }
+        { texto: 'Agradece a ideia ao júnior e registra para avaliar na próxima planning — o momento não é o certo e mudar o plano da sprint por iniciativa de um júnior pode gerar precedente ruim.', correta: false, feedback: 'Guardar uma ideia boa para "depois" por razões de protocolo ou hierarquia pode significar nunca. O timing do valor é parte do valor.' },
+        { texto: 'Adota a proposta imediatamente e anuncia a mudança de plano ao time — se é boa ideia, é boa ideia, independente de quem veio.', correta: false, feedback: 'Mudar o plano da sprint sem processo de decisão coletivo, mesmo com boa intenção, retira a agência do time e pode gerar resistência — especialmente se a proposta ainda não foi validada com o grupo.' },
+        { texto: 'Abre espaço para o júnior apresentar a proposta ao time completo, facilita uma avaliação coletiva dos trade-offs, e se o time convergir, incorpora na sprint com escopo ajustado.', correta: true, feedback: 'Dar visibilidade a uma boa ideia independente de quem veio é sinal de cultura saudável. Tech Lead que amplifica vozes subrepresentadas constrói o time que inova junto.' }
       ]
     }
   ]

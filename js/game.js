@@ -71,12 +71,12 @@ function screenIntro() {
 
   setScreen(`
     <section class="screen intro">
-      <div class="kicker">Reunião da Gerência · Pilar</div>
+      <div class="kicker">Reunião da Gerência</div>
       <h1 class="pixel-title">A Gente Vai de Turma</h1>
       <div class="heroes-row">${heroes}</div>
       <p class="lead">
-        Cinco especialistas. Cinco equipes. Um único objetivo: conter o
-        <strong>Incidente em Produção</strong> antes que ele derrube tudo.<br/>
+        Uma equipe de tecnologia formada por 5 integrantes enfrenta o
+        <strong>Incidente em Produção</strong> — a maior crise do sistema.<br/>
         Cada decisão certa acumula <strong>Pontos de Trabalho em Equipe</strong>.
         Mas só uma postura vence — <strong>ir de turma</strong>.
       </p>
@@ -104,8 +104,8 @@ function screenRoster() {
     <section class="screen roster">
       <h1 class="pixel-title">O Time</h1>
       <p class="lead">
-        Cada equipe controla um especialista. Em cada uma das 3 rodadas,
-        sua equipe enfrentará uma situação real do dia a dia.
+        Cada integrante da equipe controla um especialista. Em cada uma das 3 rodadas,
+        vocês enfrentarão situações reais do dia a dia — discutam antes de responder.
       </p>
       <div class="roster-grid">${cards}</div>
       <div class="actions">
@@ -164,7 +164,7 @@ function screenAction() {
         ${pixelSVG(p.id, { pixel: 8 })}
         <div class="name">${p.nome}</div>
         <div class="team">${p.equipe}</div>
-        <div class="timer" id="timer">${CONFIG.tempoDiscussao}</div>
+        <div class="timer" id="timer">${fmtTimer(CONFIG.tempoDiscussao)}</div>
         <div class="timer-label">tempo de discussão</div>
       </aside>
 
@@ -183,16 +183,23 @@ function screenAction() {
   setTimeout(startTimer, 360);
 }
 
+function fmtTimer(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return m > 0 ? `${m}:${String(sec).padStart(2, '0')}` : String(sec);
+}
+
 function startTimer() {
   clearInterval(state.timer);
   let t = CONFIG.tempoDiscussao;
   const el = document.getElementById('timer');
   if (!el) return;
+  el.textContent = fmtTimer(t);
   state.timer = setInterval(() => {
     t--;
     if (!el.isConnected) { clearInterval(state.timer); return; }
-    el.textContent = Math.max(t, 0);
-    if (t <= 10) el.classList.add('low');
+    el.textContent = fmtTimer(Math.max(t, 0));
+    if (t <= 20) el.classList.add('low');
     if (t <= 0)  clearInterval(state.timer);
   }, 1000);
 }
