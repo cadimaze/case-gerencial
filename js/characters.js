@@ -143,13 +143,7 @@ const VCHAR = {
       <rect x="38" y="87" width="10" height="2.6" rx="0.8" fill="#56ccf2"/>
       <rect x="38" y="91.5" width="15" height="2.6" rx="0.8" fill="#39ff6a"/>
       <rect x="48" y="98" width="4" height="4" fill="#2b2f36"/>
-      <rect x="42" y="102" width="16" height="3" rx="1.5" fill="#2b2f36"/>
-      <!-- caneca de café (segurada pela mão direita) -->
-      <path d="M66 90 q-1.5 -2 0 -4" stroke="#cfd6dd" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.8"/>
-      <path d="M70 90 q1.5 -2 0 -4" stroke="#cfd6dd" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.8"/>
-      <rect x="63" y="95" width="10" height="11" rx="2.5" fill="#f5f5f5" stroke="#c4c4c4" stroke-width="1"/>
-      <rect x="63" y="95" width="10" height="3.5" fill="#6f4a2f"/>
-      <path d="M73 97 q5 0.5 5 4.5 t-5 3.5" fill="none" stroke="#c4c4c4" stroke-width="1.6"/>`;
+      <rect x="42" y="102" width="16" height="3" rx="1.5" fill="#2b2f36"/>`;
     c.beard = `
       <path d="M31 36 Q33 56 50 59 Q67 56 69 36 Q60 49 50 49 Q40 49 31 36 Z" fill="${c.hair}"/>`;
     c.hairFront = `
