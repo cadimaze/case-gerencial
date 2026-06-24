@@ -3,25 +3,35 @@
 //  Lógica do jogo (máquina de estados de telas)
 // ====================================================================
 
-const app   = document.getElementById('app');
-const hud   = document.getElementById('hud');
+const app    = document.getElementById('app');
+const hud    = document.getElementById('hud');
 const hudBar = document.getElementById('hud-bar');
-const hudValue = document.getElementById('hud-value');
-const hudThreshold = document.getElementById('hud-threshold');
+const hudVal = document.getElementById('hud-value');
 
 const state = {
-  pontos: 0,
-  acertos: 0,
-  round: 0,       // 0, 1, 2
-  charIndex: 0,   // 0..4
-  timer: null,
-  respostas: []
+  vidaIncidente: CONFIG.vidaInicialIncidente,
+  vidaMaxima:    CONFIG.vidaInicialIncidente,
+  questionIndex: 0,
+  questions:     [],
+  timer:         null
 };
 
 const LETRAS = ['A', 'B', 'C'];
 
-// ---------- Tela -------------------------------------------------------
+// ---------- Monta lista plana de perguntas ----------------------------
+function buildQuestions() {
+  const list = [];
+  const maxQ = Math.max(...PERSONAGENS.map(p => CENARIOS[p.id].length));
+  for (let r = 0; r < maxQ; r++) {
+    for (const p of PERSONAGENS) {
+      const arr = CENARIOS[p.id];
+      if (arr[r]) list.push({ personagem: p, cenario: arr[r] });
+    }
+  }
+  return list;
+}
 
+// ---------- Tela -------------------------------------------------------
 function setScreen(html) {
   const old = app.querySelector('.screen');
   if (old) {
@@ -32,12 +42,16 @@ function setScreen(html) {
   }
 }
 
+// ---------- HUD — barra de vida do incidente --------------------------
 function updateHUD() {
-  const pct = (state.pontos / CONFIG.pontuacaoMaxima) * 100;
+  const pct = Math.min(100, Math.max(0, (state.vidaIncidente / state.vidaMaxima) * 100));
   hudBar.style.width = pct + '%';
-  hudValue.textContent = state.pontos;
-  hudThreshold.style.left =
-    (CONFIG.limiteParaVencer / CONFIG.pontuacaoMaxima * 100) + '%';
+  hudVal.textContent = Math.max(0, state.vidaIncidente);
+
+  // cor varia: cheio = vermelho, quase vazio = amarelo
+  if (pct > 60)      hudBar.style.background = 'linear-gradient(90deg,#c0392b,#e74c3c)';
+  else if (pct > 30) hudBar.style.background = 'linear-gradient(90deg,#e74c3c,#ff9a3c)';
+  else               hudBar.style.background = 'linear-gradient(90deg,#ff9a3c,var(--gold))';
 }
 
 function showHUD(show) {
@@ -46,7 +60,6 @@ function showHUD(show) {
 }
 
 // ---------- Partículas de fundo ----------------------------------------
-
 function makeStars(n = 70) {
   const wrap = document.getElementById('stars');
   let html = '';
@@ -61,32 +74,95 @@ function makeStars(n = 70) {
 }
 
 // ====================================================================
-//  TELA 1 — INTRO
+//  TELA 0 — KAIJU INTRO (o incidente chega como um monstro)
 // ====================================================================
-function screenIntro() {
+function screenKaiju() {
   showHUD(false);
-  const heroes = PERSONAGENS.map(p =>
-    `<div>${pixelSVG(p.id, { pixel: 8 })}</div>`
+
+  const heroesSmall = PERSONAGENS.map(p =>
+    `<div class="kaiju-hero-wrap" style="--char:${p.cor}">${pixelSVG(p.id, { pixel: 5, idle: true })}</div>`
   ).join('');
 
+  // Se um GIF externo for fornecido, ele aparece; senão usa a cena CSS
   setScreen(`
-    <section class="screen intro">
-      <div class="kicker">Reunião da Gerência</div>
-      <h1 class="pixel-title">A Gente Vai de Turma</h1>
-      <div class="heroes-row">${heroes}</div>
-      <p class="lead">
-        Uma equipe de tecnologia formada por 5 integrantes enfrenta o
-        <strong>Incidente em Produção</strong> — a maior crise do sistema.<br/>
-        Cada decisão certa acumula <strong>Pontos de Trabalho em Equipe</strong>.
-        Mas só uma postura vence — <strong>ir de turma</strong>.
-      </p>
-      <button class="btn" onclick="screenRoster()">Conhecer o Time ⚔️</button>
+    <section class="screen kaiju-intro">
+
+      <!-- CENA ANIMADA -->
+      <div class="kaiju-scene">
+        <!-- Tenta carregar GIF externo; se falhar, mostra a cena CSS -->
+        <img class="kaiju-gif" src="assets/kaiju-scene.gif"
+             onerror="this.style.display='none'; document.getElementById('kaiju-css-scene').style.display='flex';"
+             alt="Incidente em Produção como Kaiju" />
+
+        <div class="kaiju-css-scene" id="kaiju-css-scene">
+          <!-- Chamas de fundo -->
+          <div class="kaiju-flames">
+            <div class="flame f1"></div><div class="flame f2"></div>
+            <div class="flame f3"></div><div class="flame f4"></div>
+            <div class="flame f5"></div>
+          </div>
+          <!-- Cidade destruída -->
+          <div class="kaiju-city">
+            <div class="building b1"></div>
+            <div class="building b2"></div>
+            <div class="building b3 crumbling"></div>
+            <div class="building b4"></div>
+            <div class="building b5 crumbling"></div>
+            <div class="building b6"></div>
+          </div>
+          <!-- Monstro Incidente (SVG grande) -->
+          <div class="kaiju-monster">
+            ${pixelSVG('incident', { pixel: 14, idle: false })}
+          </div>
+          <!-- Heróis observando de baixo -->
+          <div class="kaiju-heroes-row">
+            ${heroesSmall}
+          </div>
+        </div>
+      </div>
+
+      <!-- TEXTO EXPLICATIVO -->
+      <div class="kaiju-text panel">
+        <h1 class="pixel-title kaiju-title">INCIDENTE EM<br/>PRODUÇÃO</h1>
+        <p class="kaiju-subtitle">O monstro que nenhum sistema quer enfrentar</p>
+
+        <div class="kaiju-evils">
+          <div class="evil-item">
+            <span class="evil-icon">💸</span>
+            <span><strong>Prejuízo imediato</strong> — cada minuto de sistema fora do ar é receita perdida e cliente insatisfeito</span>
+          </div>
+          <div class="evil-item">
+            <span class="evil-icon">🔥</span>
+            <span><strong>Pressão extrema</strong> — todo mundo olhando, o relógio correndo e as decisões pesadas demais para um só carregar</span>
+          </div>
+          <div class="evil-item">
+            <span class="evil-icon">🔗</span>
+            <span><strong>Efeito cascata</strong> — um serviço fora derruba outros, e quem não sabe do problema não pode ajudar</span>
+          </div>
+          <div class="evil-item">
+            <span class="evil-icon">😰</span>
+            <span><strong>Paralisia por isolamento</strong> — quando cada especialista age sozinho, o incidente cresce. Só juntos ele cai.</span>
+          </div>
+        </div>
+
+        <div class="kaiju-why panel">
+          <p class="kaiju-why-title">Por que a gente vai de turma?</p>
+          <p>Incidente em produção não se vence com o herói solitário. Vence-se com <strong>comunicação rápida</strong>, <strong>decisões coletivas</strong> e <strong>cada especialista confiando nos outros</strong>. É o pilar <em>Vai de Turma</em> em ação — e é exatamente o que vocês vão praticar agora.</p>
+        </div>
+
+        <div style="text-align:center; margin-top:24px">
+          <button class="btn btn-kaiju" onclick="screenRoster()">
+            ⚔️ Aceitar o Desafio
+          </button>
+        </div>
+      </div>
+
     </section>
   `);
 }
 
 // ====================================================================
-//  TELA 2 — APRESENTAÇÃO DO TIME
+//  TELA 1 — APRESENTAÇÃO DO TIME
 // ====================================================================
 function screenRoster() {
   showHUD(false);
@@ -102,55 +178,49 @@ function screenRoster() {
 
   setScreen(`
     <section class="screen roster">
-      <h1 class="pixel-title">O Time</h1>
-      <p class="lead">
-        Cada integrante da equipe controla um especialista. Em cada uma das 3 rodadas,
-        vocês enfrentarão situações reais do dia a dia — discutam antes de responder.
+      <h1 class="pixel-title" style="text-align:center; margin-bottom:10px">O Time</h1>
+      <p class="lead" style="text-align:center; margin-bottom:28px">
+        Cinco especialistas. Trinta decisões. Um incidente para derrotar.<br/>
+        Cada resposta certa tira <strong style="color:var(--green)">20 de vida</strong> do incidente,
+        a meio certa tira <strong style="color:var(--gold)">10</strong>,
+        e a errada <strong style="color:var(--red)">aumenta em 10</strong>. Discutam antes de responder.
       </p>
       <div class="roster-grid">${cards}</div>
-      <div class="actions">
-        <button class="btn" onclick="startRound(0)">Começar a Jornada 🗺️</button>
+      <div class="actions" style="text-align:center">
+        <button class="btn" onclick="startGame()">Começar a Batalha ⚔️</button>
       </div>
     </section>
   `);
 }
 
 // ====================================================================
-//  TRANSIÇÃO DE RODADA
+//  INÍCIO DO JOGO — monta questões e vai para a primeira
 // ====================================================================
-function startRound(r) {
-  state.round     = r;
-  state.charIndex = 0;
-  showHUD(false);
-
-  const titulos = ['O Alerta Chega', 'A Crise Escala', 'O Momento Decisivo'];
-  const subs = [
-    'Rodada 1 — Primeira decisão de cada especialista',
-    'Rodada 2 — A pressão aumenta',
-    'Rodada 3 — A última chance antes do Incidente'
-  ];
-
-  setScreen(`
-    <section class="screen round-intro">
-      <div class="big">Rodada ${r + 1}</div>
-      <div class="sub">${titulos[r]}</div>
-      <p class="lead" style="margin-top:22px">${subs[r]}</p>
-      <div style="margin-top:30px">
-        <button class="btn" onclick="screenAction()">Avançar ▶</button>
-      </div>
-    </section>
-  `);
+function startGame() {
+  state.vidaIncidente = CONFIG.vidaInicialIncidente;
+  state.vidaMaxima    = CONFIG.vidaInicialIncidente;
+  state.questionIndex = 0;
+  state.questions     = buildQuestions();
+  screenAction();
 }
 
 // ====================================================================
 //  TELA DE AÇÃO (pergunta)
 // ====================================================================
 function screenAction() {
-  const p       = PERSONAGENS[state.charIndex];
-  const cenario = CENARIOS[p.id][state.round];
+  if (state.questionIndex >= state.questions.length) {
+    screenFinale();
+    return;
+  }
+
+  const q   = state.questions[state.questionIndex];
+  const p   = q.personagem;
+  const cen = q.cenario;
+  const total = state.questions.length;
+  const atual = state.questionIndex + 1;
   showHUD(true);
 
-  const opcoes = cenario.opcoes.map((op, i) => `
+  const opcoes = cen.opcoes.map((op, i) => `
     <button class="option" data-i="${i}" onclick="answer(${i})">
       <span class="letter">${LETRAS[i]}</span>
       <span class="op-text">${op.texto}</span>
@@ -160,7 +230,7 @@ function screenAction() {
   setScreen(`
     <section class="screen action-screen" style="--char:${p.cor}">
       <aside class="action-hero panel">
-        <div class="round-tag">Rodada ${state.round + 1} · ${state.charIndex + 1}/5</div>
+        <div class="round-tag">Pergunta ${atual} / ${total}</div>
         ${pixelSVG(p.id, { pixel: 8 })}
         <div class="name">${p.nome}</div>
         <div class="team">${p.equipe}</div>
@@ -170,8 +240,8 @@ function screenAction() {
 
       <div class="action-main">
         <div class="action-card panel">
-          <div class="action-title">${cenario.titulo}</div>
-          <div class="situacao">${cenario.situacao}</div>
+          <div class="action-title">${cen.titulo}</div>
+          <div class="situacao">${cen.situacao}</div>
         </div>
         <div class="options" id="options">${opcoes}</div>
         <div class="feedback panel" id="feedback"></div>
@@ -208,151 +278,103 @@ function startTimer() {
 function answer(i) {
   clearInterval(state.timer);
 
-  const p            = PERSONAGENS[state.charIndex];
-  const cenario      = CENARIOS[p.id][state.round];
-  const optionsWrap  = document.getElementById('options');
+  const q           = state.questions[state.questionIndex];
+  const cen         = q.cenario;
+  const optionsWrap = document.getElementById('options');
   if (optionsWrap.classList.contains('locked')) return;
   optionsWrap.classList.add('locked');
 
-  const acertou      = !!cenario.opcoes[i].correta;
-  const correctIndex = cenario.opcoes.findIndex(o => o.correta);
-  const opEls        = document.querySelectorAll('.option');
+  const pontos      = cen.opcoes[i].pontos;
+  const bestIndex   = cen.opcoes.reduce((best, op, idx, arr) =>
+    op.pontos > arr[best].pontos ? idx : best, 0);
 
+  // Aplica dano / cura ao incidente
+  // pontos = 20 → tira 20; pontos = 10 → tira 10; pontos = -10 → adiciona 10
+  state.vidaIncidente -= pontos;
+  // Permite que a vida suba acima do máximo (respostas erradas)
+  state.vidaMaxima = Math.max(state.vidaMaxima, state.vidaIncidente);
+
+  const opEls = document.querySelectorAll('.option');
   opEls.forEach((el, idx) => {
     el.classList.add('locked');
-    if (idx === correctIndex) el.classList.add('correct');
-    else if (idx === i)       el.classList.add('wrong');
-    else                      el.classList.add('dim');
+    if (idx === bestIndex)  el.classList.add('correct');
+    else if (idx === i)     el.classList.add(pontos === 10 ? 'half' : 'wrong');
+    else                    el.classList.add('dim');
   });
 
-  if (acertou) {
-    state.pontos  += CONFIG.pontosPorAcerto;
-    state.acertos += 1;
-    floatPoints();
-  }
   updateHUD();
-  state.respostas.push({ char: p.id, round: state.round, acertou });
 
-  // feedback
+  // Indicador flutuante
+  floatDamage(pontos);
+
+  // Determina ícone e classe do feedback
+  let fbClass, fbIcon, ptLabel;
+  if (pontos === 20) {
+    fbClass = 'good'; fbIcon = '🛡️';
+    ptLabel = `<span class="pts">−20 de vida do Incidente!</span> `;
+  } else if (pontos === 10) {
+    fbClass = 'half'; fbIcon = '⚡';
+    ptLabel = `<span class="pts-half">−10 de vida do Incidente</span> `;
+  } else {
+    fbClass = 'bad'; fbIcon = '💥';
+    ptLabel = `<span class="pts-bad">+10 de vida do Incidente!</span> `;
+  }
+
   const fb = document.getElementById('feedback');
-  fb.className = 'feedback panel show ' + (acertou ? 'good' : 'bad');
+  fb.className = 'feedback panel show ' + fbClass;
   fb.innerHTML = `
-    <span class="emoji">${acertou ? '🛡️' : '💔'}</span>
+    <span class="emoji">${fbIcon}</span>
     <span>
-      ${acertou ? `<span class="pts">+${CONFIG.pontosPorAcerto} Trabalho em Equipe!</span> ` : ''}
-      ${cenario.opcoes[i].feedback}
-      ${!acertou
-        ? `<br/><em style="color:var(--gold-soft)">Resposta alinhada: ${LETRAS[correctIndex]}) ${cenario.opcoes[correctIndex].texto}</em>`
+      ${ptLabel}
+      ${cen.opcoes[i].feedback}
+      ${pontos < 20
+        ? `<br/><em style="color:var(--gold-soft)">Melhor resposta: ${LETRAS[bestIndex]}) ${cen.opcoes[bestIndex].texto}</em>`
         : ''}
     </span>
   `;
 
-  // botão próximo
-  const footer      = document.getElementById('footer');
-  const isLastChar  = state.charIndex >= PERSONAGENS.length - 1;
-  const isLastRound = state.round >= 2;
+  // Botão próximo
+  const footer = document.getElementById('footer');
+  const isLast = state.questionIndex >= state.questions.length - 1;
+  const venceu = state.vidaIncidente <= 0;
 
-  let label, action;
-  if (!isLastChar) {
-    label = 'Próxima Equipe ▶';
-    action = 'nextChar()';
-  } else if (!isLastRound) {
-    label = 'Próxima Rodada ▶▶';
-    action = `startRound(${state.round + 1})`;
+  if (venceu) {
+    footer.innerHTML = `<button class="btn btn-win-pulse" onclick="screenFinale()">🎉 Incidente Derrotado! Ver Resultado</button>`;
+  } else if (isLast) {
+    footer.innerHTML = `<button class="btn" onclick="screenFinale()">Ver Resultado Final 📊</button>`;
   } else {
-    label = 'Ver Resultado Final 📊';
-    action = 'screenPreBattle()';
+    footer.innerHTML = `<button class="btn" onclick="nextQuestion()">Próxima Pergunta ▶</button>`;
   }
-  footer.innerHTML = `<button class="btn" onclick="${action}">${label}</button>`;
 }
 
-function nextChar() {
-  state.charIndex++;
+function nextQuestion() {
+  state.questionIndex++;
   screenAction();
 }
 
-function floatPoints() {
+function floatDamage(pontos) {
   const hero = document.querySelector('.action-hero');
   const r = hero
     ? hero.getBoundingClientRect()
     : { left: window.innerWidth / 2, top: 120, width: 0 };
   const el = document.createElement('div');
-  el.className = 'float-pts';
-  el.textContent = '+' + CONFIG.pontosPorAcerto;
-  el.style.left = (r.left + r.width / 2 - 20) + 'px';
+  el.className = 'float-pts' + (pontos > 0 ? '' : ' float-bad');
+  el.textContent = pontos > 0 ? `−${pontos} ❤️` : `+${Math.abs(pontos)} ❤️`;
+  el.style.left = (r.left + r.width / 2 - 30) + 'px';
   el.style.top  = (r.top + 40) + 'px';
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 1300);
 }
 
 // ====================================================================
-//  TELA PRÉ-BATALHA — placar geral + botão de enfrentar o incidente
-// ====================================================================
-function screenPreBattle() {
-  showHUD(false);
-  clearInterval(state.timer);
-
-  const venceu  = state.pontos >= CONFIG.limiteParaVencer;
-  const faltou  = CONFIG.limiteParaVencer - state.pontos;
-  const pct     = Math.round((state.pontos / CONFIG.pontuacaoMaxima) * 100);
-  const statusCor  = venceu ? 'var(--green)' : '#ff9a3c';
-  const statusIcon = venceu ? '⚡' : '⚠️';
-  const statusMsg  = venceu
-    ? `Com <strong>${state.pontos}</strong> pontos, o time está pronto para o confronto!`
-    : `Com <strong>${state.pontos}</strong> pontos, faltam <strong>${faltou}</strong> para a meta — mas é hora de agir!`;
-
-  // mini-placar por personagem
-  const miniCards = PERSONAGENS.map(p => {
-    const rs = state.respostas.filter(r => r.char === p.id);
-    const pts = rs.filter(r => r.acertou).length * CONFIG.pontosPorAcerto;
-    const stars = rs.map(r => r.acertou ? '★' : '☆').join('');
-    return `
-      <div class="pre-battle-card panel" style="--char:${p.cor}">
-        ${pixelSVG(p.id, { pixel: 5, idle: false })}
-        <div class="pbc-name">${p.nome}</div>
-        <div class="pbc-stars">${stars}</div>
-        <div class="pbc-pts" style="color:${p.cor}">${pts} pts</div>
-      </div>`;
-  }).join('');
-
-  setScreen(`
-    <section class="screen pre-battle">
-      <h2 class="pixel-title" style="text-align:center; margin-bottom:6px">Placar Final da Turma</h2>
-
-      <div class="pre-battle-cards">${miniCards}</div>
-
-      <div class="pre-battle-total panel">
-        <div class="pbt-bar-wrap">
-          <div class="pbt-bar" style="width:${pct}%; background: ${venceu ? 'linear-gradient(90deg,var(--gold),var(--green))' : 'linear-gradient(90deg,var(--gold),#ff9a3c)'}"></div>
-          <div class="pbt-threshold"></div>
-        </div>
-        <div class="pbt-numbers">
-          <span style="color:${statusCor}; font-family:var(--pixel); font-size:clamp(18px,3vw,30px)">${statusIcon} ${state.pontos}</span>
-          <span style="color:var(--ink-soft); font-size:15px">/ ${CONFIG.pontuacaoMaxima} Pontos de Trabalho em Equipe</span>
-        </div>
-        <p class="pbt-msg">${statusMsg}</p>
-      </div>
-
-      <div class="pre-battle-action">
-        <div class="incident-warning">
-          ${pixelSVG('incident', { pixel: 7, idle: true })}
-        </div>
-        <button class="btn btn-incident" onclick="screenFinale()">
-          ⚠️ Enfrentar o Incidente em Produção
-        </button>
-      </div>
-    </section>
-  `);
-}
-
-// ====================================================================
-//  TELA FINAL — BATALHA CONTRA O INCIDENTE EM PRODUÇÃO
+//  TELA FINAL — resultado da batalha
 // ====================================================================
 function screenFinale() {
   showHUD(false);
-  const venceu = state.pontos >= CONFIG.limiteParaVencer;
+  clearInterval(state.timer);
 
-  const party = PERSONAGENS.map(p => pixelSVG(p.id, { pixel: 5 })).join('');
+  const venceu = state.vidaIncidente <= 0;
+  const party  = PERSONAGENS.map(p => pixelSVG(p.id, { pixel: 5 })).join('');
 
   setScreen(`
     <section class="screen finale">
@@ -373,14 +395,12 @@ function runBattle(venceu) {
   const stage    = document.querySelector('.battle-stage');
   const party    = document.querySelector('.battle-party');
 
-  // Fase 1: carga de energia (todos os personagens pulsam)
   if (party) party.classList.add('battle-charging');
 
   setTimeout(() => {
     if (party) party.classList.remove('battle-charging');
 
-    // Fase 2: ataques sequenciais, um por personagem
-    const totalShots = Math.max(PERSONAGENS.length, state.acertos + 2);
+    const totalShots = Math.max(PERSONAGENS.length, 7);
     let shot = 0;
 
     const fireNext = () => {
@@ -391,7 +411,6 @@ function runBattle(venceu) {
       const pIdx = shot % PERSONAGENS.length;
       const cor  = PERSONAGENS[pIdx].cor;
 
-      // destaca o personagem que está atacando
       const charSvgs = document.querySelectorAll('.battle-party .pixel-svg');
       charSvgs.forEach((el, i) => el.style.filter = i === pIdx ? `drop-shadow(0 0 8px ${cor})` : 'none');
 
@@ -402,7 +421,6 @@ function runBattle(venceu) {
         void incident.offsetWidth;
         incident.classList.add('shake');
       }
-      // flash de impacto no stage
       if (stage) {
         const flash = document.createElement('div');
         flash.style.cssText = `position:absolute;inset:0;background:${cor};opacity:0;border-radius:inherit;pointer-events:none;transition:opacity .08s`;
@@ -425,11 +443,11 @@ function shootBeam(stage, cor) {
   const beam = document.createElement('div');
   beam.className = 'beam';
   beam.style.setProperty('--beam-color', cor);
-  const r       = stage.getBoundingClientRect();
-  const startY  = r.height * (0.42 + Math.random() * 0.22);
-  beam.style.left   = '18%';
-  beam.style.top    = startY + 'px';
-  beam.style.width  = '0px';
+  const r      = stage.getBoundingClientRect();
+  const startY = r.height * (0.42 + Math.random() * 0.22);
+  beam.style.left       = '18%';
+  beam.style.top        = startY + 'px';
+  beam.style.width      = '0px';
   beam.style.background = `linear-gradient(90deg, transparent, ${cor}cc, #fff, ${cor}cc)`;
   beam.style.boxShadow  = `0 0 8px 2px ${cor}88`;
   stage.appendChild(beam);
@@ -446,33 +464,35 @@ function shootBeam(stage, cor) {
 
 function revealResult(venceu, incident) {
   const box = document.getElementById('finale-result');
+  const total = state.questions.length;
+  const qRespondidas = Math.min(state.questionIndex + 1, total);
 
   if (venceu) {
     if (incident) incident.classList.add('flee');
     launchConfetti();
     box.innerHTML = `
-      <div class="result win">INCIDENTE RESOLVIDO!</div>
-      <div class="score-line">A turma reuniu <strong>${state.pontos}</strong> de ${CONFIG.pontuacaoMaxima} Pontos de Trabalho em Equipe</div>
+      <div class="result win">INCIDENTE DERROTADO!</div>
+      <div class="score-line">O incidente foi contido em <strong>${qRespondidas}</strong> de ${total} perguntas</div>
       <p class="message">
-        O Incidente em Produção foi contido! Não pela força de um só —
+        O Incidente em Produção foi vencido! Não pela força de um só —
         mas porque cada especialista comunicou, pediu ajuda e agiu junto.
         É exatamente assim que <strong>a gente vai de turma</strong>. 🎉
       </p>
-      <button class="btn secondary" onclick="screenIntro()">Jogar Novamente 🔁</button>
+      <button class="btn secondary" onclick="screenKaiju()">Jogar Novamente 🔁</button>
     `;
   } else {
     if (incident) incident.classList.add('victory-incident');
-    const faltou = CONFIG.limiteParaVencer - state.pontos;
+    const vidaRestante = Math.max(0, state.vidaIncidente);
     box.innerHTML = `
       <div class="result lose">INCIDENTE PERSISTE...</div>
-      <div class="score-line">A turma reuniu <strong>${state.pontos}</strong> de ${CONFIG.pontuacaoMaxima} Pontos de Trabalho em Equipe</div>
-      <div class="score-line">Faltaram <strong>${faltou}</strong> pontos para atingir a meta de ${CONFIG.limiteParaVencer}</div>
+      <div class="score-line">O incidente ainda tem <strong>${vidaRestante}</strong> pontos de vida</div>
+      <div class="score-line">A turma respondeu todas as <strong>${total}</strong> perguntas sem zerar a vida do monstro</div>
       <p class="message">
         O incidente resistiu desta vez. A lição fica: cada decisão de
         ir de turma — comunicar, colaborar, pedir e dar ajuda — é o que
         transforma crises em vitórias coletivas. Bora tentar de novo! 💪
       </p>
-      <button class="btn secondary" onclick="screenIntro()">Tentar Novamente 🔁</button>
+      <button class="btn secondary" onclick="screenKaiju()">Tentar Novamente 🔁</button>
     `;
   }
 }
@@ -503,15 +523,6 @@ document.getElementById('btn-fullscreen').addEventListener('click', () => {
   }
 });
 
-// Reinício completo ao voltar para intro
-const _origIntro = screenIntro;
-screenIntro = function () {
-  state.pontos = 0; state.acertos = 0;
-  state.round  = 0; state.charIndex = 0; state.respostas = [];
-  updateHUD();
-  _origIntro();
-};
-
 // ---------- Boot ------------------------------------------------------
 makeStars();
-screenIntro();
+screenKaiju();

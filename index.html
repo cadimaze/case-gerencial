@@ -10,27 +10,23 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <!-- Logo Itaú sutil — adicione o arquivo assets/itau.png com fundo transparente -->
   <img src="assets/itau.png" class="brand" alt="" onerror="this.style.display='none'" />
 
-  <!-- Botão tela cheia -->
   <button id="btn-fullscreen" class="fullscreen-btn" title="Tela cheia">⛶</button>
 
-  <!-- Partículas de fundo -->
   <div class="stars" id="stars"></div>
 
   <main id="app" class="app">
     <!-- Telas injetadas via JavaScript -->
   </main>
 
-  <!-- HUD de Heroísmo (aparece durante as rodadas) -->
+  <!-- HUD — barra de vida do incidente (aparece durante as perguntas) -->
   <div id="hud" class="hud hidden">
-    <div class="hud-label">Pontos de Trabalho em Equipe</div>
+    <div class="hud-label">❤️ Vida do Incidente</div>
     <div class="hud-bar-wrap">
       <div class="hud-bar" id="hud-bar"></div>
-      <div class="hud-threshold" id="hud-threshold" title="Meta para conter o Incidente"></div>
     </div>
-    <div class="hud-value"><span id="hud-value">0</span> / 300</div>
+    <div class="hud-value"><span id="hud-value">300</span> HP</div>
   </div>
 
   <script src="js/data.js"></script>
