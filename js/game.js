@@ -122,7 +122,7 @@ function generateEmbers(n = 22) {
 }
 
 // ====================================================================
-//  TELA 0 — KAIJU INTRO (o incidente chega como um monstro)
+//  TELA 0A — LANDING (imagem + título, sem scroll)
 // ====================================================================
 function screenKaiju() {
   showHUD(false);
@@ -132,12 +132,9 @@ function screenKaiju() {
   ).join('');
 
   setScreen(`
-    <section class="screen kaiju-intro">
+    <section class="screen kaiju-landing">
 
-      <!-- CENA VISUAL -->
       <div class="kaiju-scene">
-
-        <!-- Imagem fornecida externamente (gif / png / jpg) com efeitos sobre ela -->
         <img class="kaiju-img" id="kaiju-img"
              src="${KAIJU_FMTS[0]}"
              data-fmt="0"
@@ -145,7 +142,6 @@ function screenKaiju() {
              onerror="kaijuNextFmt(this)"
              alt="Incidente em Produção como Kaiju" />
 
-        <!-- Camadas de efeito animado sobre a imagem (visíveis só quando ela carrega) -->
         <div class="kaiju-overlay" id="kaiju-overlay">
           <div class="kaiju-fire-glow"></div>
           <div class="kaiju-vignette"></div>
@@ -153,45 +149,54 @@ function screenKaiju() {
         </div>
 
         <div class="kaiju-css-scene" id="kaiju-css-scene">
-          <!-- Chamas de fundo -->
           <div class="kaiju-flames">
             <div class="flame f1"></div><div class="flame f2"></div>
             <div class="flame f3"></div><div class="flame f4"></div>
             <div class="flame f5"></div>
           </div>
-          <!-- Cidade destruída -->
           <div class="kaiju-city">
-            <div class="building b1"></div>
-            <div class="building b2"></div>
-            <div class="building b3 crumbling"></div>
-            <div class="building b4"></div>
-            <div class="building b5 crumbling"></div>
-            <div class="building b6"></div>
+            <div class="building b1"></div><div class="building b2"></div>
+            <div class="building b3 crumbling"></div><div class="building b4"></div>
+            <div class="building b5 crumbling"></div><div class="building b6"></div>
           </div>
-          <!-- Monstro Incidente (SVG grande) -->
-          <div class="kaiju-monster">
-            ${pixelSVG('incident', { pixel: 14, idle: false })}
-          </div>
-          <!-- Heróis observando de baixo -->
-          <div class="kaiju-heroes-row">
-            ${heroesSmall}
-          </div>
+          <div class="kaiju-monster">${pixelSVG('incident', { pixel: 14, idle: false })}</div>
+          <div class="kaiju-heroes-row">${heroesSmall}</div>
         </div>
       </div>
 
-      <!-- TEXTO EXPLICATIVO -->
-      <div class="kaiju-text panel">
-        <h1 class="pixel-title kaiju-title">INCIDENTE EM<br/>PRODUÇÃO</h1>
-        <p class="kaiju-subtitle">O monstro que nenhum sistema quer enfrentar</p>
+      <div class="landing-footer">
+        <h1 class="pixel-title landing-title">O Incidente em Produção</h1>
+        <button class="btn btn-landing" onclick="screenKaijuExplain()">
+          Entender o Desafio ▶
+        </button>
+      </div>
 
+    </section>
+  `);
+}
+
+// ====================================================================
+//  TELA 0B — EXPLICAÇÃO (evils + por que turma + botão, sem scroll)
+// ====================================================================
+function screenKaijuExplain() {
+  showHUD(false);
+  setScreen(`
+    <section class="screen kaiju-explain">
+
+      <div class="explain-header">
+        <h1 class="pixel-title explain-title">Incidente em Produção</h1>
+        <p class="explain-sub">O monstro que nenhum sistema vence sozinho</p>
+      </div>
+
+      <div class="explain-body">
         <div class="kaiju-evils">
           <div class="evil-item">
             <span class="evil-icon">💸</span>
-            <span><strong>Prejuízo imediato</strong> — cada minuto de sistema fora do ar é receita perdida e cliente insatisfeito</span>
+            <span><strong>Prejuízo imediato</strong> — cada minuto fora do ar é receita perdida e cliente insatisfeito</span>
           </div>
           <div class="evil-item">
             <span class="evil-icon">🔥</span>
-            <span><strong>Pressão extrema</strong> — todo mundo olhando, o relógio correndo e as decisões pesadas demais para um só carregar</span>
+            <span><strong>Pressão extrema</strong> — todo mundo olhando, o relógio correndo, decisões pesadas demais para um só carregar</span>
           </div>
           <div class="evil-item">
             <span class="evil-icon">🔗</span>
@@ -199,20 +204,20 @@ function screenKaiju() {
           </div>
           <div class="evil-item">
             <span class="evil-icon">😰</span>
-            <span><strong>Paralisia por isolamento</strong> — quando cada especialista age sozinho, o incidente cresce. Só juntos ele cai.</span>
+            <span><strong>Paralisia por isolamento</strong> — especialistas agindo sozinhos fazem o incidente crescer. Só juntos ele cai.</span>
           </div>
         </div>
 
-        <div class="kaiju-why panel">
+        <div class="explain-why panel">
           <p class="kaiju-why-title">Por que a gente vai de turma?</p>
-          <p>Incidente em produção não se vence com o herói solitário. Vence-se com <strong>comunicação rápida</strong>, <strong>decisões coletivas</strong> e <strong>cada especialista confiando nos outros</strong>. É o pilar <em>Vai de Turma</em> em ação — e é exatamente o que vocês vão praticar agora.</p>
+          <p>Incidente não se vence com herói solitário. Vence-se com <strong>comunicação rápida</strong>, <strong>decisões coletivas</strong> e <strong>confiança entre especialistas</strong>. É o pilar <em>Vai de Turma</em> em ação.</p>
         </div>
+      </div>
 
-        <div style="text-align:center; margin-top:24px">
-          <button class="btn btn-kaiju" onclick="screenRoster()">
-            ⚔️ Aceitar o Desafio
-          </button>
-        </div>
+      <div class="explain-footer">
+        <button class="btn btn-kaiju" onclick="screenRoster()">
+          ⚔️ Aceitar o Desafio
+        </button>
       </div>
 
     </section>
