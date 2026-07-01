@@ -253,7 +253,7 @@ function screenRoster() {
     <section class="screen roster">
       <h1 class="pixel-title" style="text-align:center; margin-bottom:10px">O Time</h1>
       <p class="lead" style="text-align:center; margin-bottom:28px">
-        Cinco especialistas. Trinta decisões. Um incidente para derrotar.<br/>
+        Cinco especialistas. Vinte decisões. Um incidente para derrotar.<br/>
         Cada resposta certa tira <strong style="color:var(--green)">20 de vida</strong> do incidente,
         a meio certa tira <strong style="color:var(--gold)">10</strong>,
         e a errada <strong style="color:var(--red)">aumenta em 10</strong>. Discutam antes de responder.
