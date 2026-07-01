@@ -107,8 +107,48 @@ function kaijuNextFmt(img) {
 }
 
 function kaijuImgLoaded() {
+  const img     = document.getElementById('kaiju-img');
   const overlay = document.getElementById('kaiju-overlay');
-  if (overlay) overlay.style.display = 'block';
+  if (!overlay) { generateEmbers(); return; }
+
+  function syncOverlay() {
+    if (!img || !img.naturalWidth) return;
+    const boxW = img.offsetWidth;
+    const boxH = img.offsetHeight;
+    if (!boxW || !boxH) return;
+
+    const nRatio = img.naturalWidth / img.naturalHeight;
+    const bRatio = boxW / boxH;
+    const fit    = window.getComputedStyle(img).objectFit;
+
+    let w = boxW, h = boxH, l = 0, t = 0;
+
+    // object-fit: contain pode deixar espaço vazio ao redor da imagem.
+    // Calcula a área realmente ocupada pela imagem dentro do elemento.
+    if (fit === 'contain' && Math.abs(nRatio - bRatio) > 0.005) {
+      if (nRatio > bRatio) {
+        // imagem limitada pela largura — espaço vazio em cima e embaixo
+        w = boxW;
+        h = Math.round(boxW / nRatio);
+        t = Math.round((boxH - h) / 2);
+      } else {
+        // imagem limitada pela altura — espaço vazio nas laterais
+        h = boxH;
+        w = Math.round(boxH * nRatio);
+        l = Math.round((boxW - w) / 2);
+      }
+    }
+
+    Object.assign(overlay.style, {
+      left: l + 'px', top: t + 'px',
+      right: 'auto', bottom: 'auto',
+      width: w + 'px', height: h + 'px',
+      display: 'block'
+    });
+  }
+
+  syncOverlay();
+  window.addEventListener('resize', () => { if (img.isConnected) syncOverlay(); });
   generateEmbers();
 }
 
