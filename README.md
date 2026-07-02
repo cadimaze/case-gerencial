@@ -19,6 +19,9 @@ pedir/dar ajuda).
   (apenas guia; o apresentador clica quando a equipe decide).
 - Total possível: **300 pontos**. Para **derrotar o Dragão** na batalha
   final, a turma precisa somar **pelo menos 200**.
+- O cronômetro de discussão **não é mais um valor fixo**: ele é calculado
+  a partir do tempo total que o apresentador tem disponível, para que as
+  15 ações sempre caibam dentro da apresentação (ver equação abaixo).
 
 ## Como usar na apresentação
 
@@ -46,5 +49,14 @@ assets/itau-logo.svg
 Tudo que normalmente se quer mudar está em `js/data.js`:
 - `CONFIG.limiteParaVencer` — meta para derrotar o Dragão (padrão 200)
 - `CONFIG.pontosPorAcerto` — pontos por acerto (padrão 20)
-- `CONFIG.tempoDiscussao` — segundos do cronômetro (padrão 60)
-- `CENARIOS` — textos das situações, opções e feedbacks
+- `CONFIG.tempoApresentacaoMin` — minutos totais que você tem para apresentar (padrão 25)
+- `CONFIG.tempoAberturaSeg` — segundos reservados para intro, turma, transições de rodada e batalha final (padrão 150)
+- `CONFIG.tempoLeituraFeedbackSeg` — segundos para ler o feedback e avançar, por ação (padrão 10)
+- `CONFIG.tempoDiscussao` — **calculado automaticamente**, não editar direto:
+  ```
+  tempoDiscussao = ((tempoApresentacaoMin × 60 − tempoAberturaSeg) / totalAcoes) − tempoLeituraFeedbackSeg
+  ```
+  Se você tiver mais ou menos tempo para apresentar, basta ajustar
+  `tempoApresentacaoMin` que o cronômetro de cada ação se recalcula sozinho.
+- `CENARIOS` — textos das situações, opções e feedbacks (mantidos curtos e
+  diretos, sem perder o nível de desafio das 3 opções)
